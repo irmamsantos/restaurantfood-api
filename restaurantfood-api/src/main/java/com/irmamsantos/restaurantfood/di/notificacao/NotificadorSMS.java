@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import com.irmamsantos.restaurantfood.di.modelo.Cliente;
 
 //instancia o bean pelo Spring para injectar no AtivacaoClienteService
-@Qualifier(value="normal")
+@Qualifier(value="urgente")
 @Component
-public class NotificadorEmail implements Notificador  {
+public class NotificadorSMS implements Notificador  {
 	
 
 	/* (non-Javadoc)
@@ -17,7 +17,7 @@ public class NotificadorEmail implements Notificador  {
 	 */
 	public void notificar(Cliente cliente, String mensagem) {
 		
-		System.out.printf("Notificando %s através do e-mail %s: %s\n", 
-				cliente.getNome(), cliente.getEmail(), mensagem);
+		System.out.printf("Notificando %s através do SMS %s: %s\n", 
+				cliente.getNome(), cliente.getTelefone(), mensagem);
 	}
 }
