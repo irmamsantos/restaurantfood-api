@@ -11,6 +11,10 @@ public class AtivacaoClienteService {
 
 	private NotificadorEmail notificador;
 	
+	public AtivacaoClienteService(NotificadorEmail notificador) {
+		this.notificador = notificador;
+	}
+	
 //	public AtivacaoClienteService() {
 //		System.out.println("AtivacaoClienteService");
 //	}
