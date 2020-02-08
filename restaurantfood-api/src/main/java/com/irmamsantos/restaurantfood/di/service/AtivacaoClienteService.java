@@ -1,36 +1,22 @@
 package com.irmamsantos.restaurantfood.di.service;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Component;
 
 import com.irmamsantos.restaurantfood.di.modelo.Cliente;
-import com.irmamsantos.restaurantfood.di.notificacao.EnumNivelUrgencia;
-import com.irmamsantos.restaurantfood.di.notificacao.Notificador;
-import com.irmamsantos.restaurantfood.di.notificacao.TipoDoNotificador;
 
-//porque foi definido o bean 
-//@Component
+
+@Component
 public class AtivacaoClienteService {
-
-	//@Qualifier(value="urgente")
-	@TipoDoNotificador(EnumNivelUrgencia.NAO_URGENTE)
+	
 	@Autowired
-	private Notificador notificador;
-	
-	//@PostConstruct
-	public void init() {
-		System.out.println("INIT AtivacaoClienteService");
-	}
+	private ApplicationEventPublisher eventPublisher;
 
-	//@PreDestroy
-	public void destroy() {
-		System.out.println("DESTROY AtivacaoClienteService");
-	}
-	
 	public void ativar(Cliente cliente) {
 		cliente.ativar();
-		notificador.notificar(cliente, "Seu cadastro no sistema está ativo!");
+		
+		//notifica o conatiner que o cliente está activo neste momento
+		eventPublisher.publishEvent(new ClienteActivadoEvent(cliente));
 	}
 }
