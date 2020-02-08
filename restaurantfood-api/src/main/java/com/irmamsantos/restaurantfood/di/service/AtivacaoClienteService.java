@@ -1,6 +1,8 @@
 package com.irmamsantos.restaurantfood.di.service;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +13,7 @@ import com.irmamsantos.restaurantfood.di.notificacao.Notificador;
 public class AtivacaoClienteService {
 
 	@Autowired(required = false)
-	private Notificador notificador;
+	private List<Notificador> notificadores;
 	
 //	public AtivacaoClienteService(Notificador notificador) {
 //		this.notificador = notificador;
@@ -23,19 +25,20 @@ public class AtivacaoClienteService {
 	
 	public void ativar(Cliente cliente) {
 		cliente.ativar();
-		
-		if (this.notificador != null) {
-			this.notificador.notificar(cliente, "Seu cadastro no sistema está ativo!");
-		} else {
-			System.out.println("Não existe notificador mas o cliente foi activo!");
+		for (Notificador notificador : notificadores) {
+			if (notificador != null) {
+				notificador.notificar(cliente, "Seu cadastro no sistema está ativo!");
+			} else {
+				System.out.println("Não existe notificador mas o cliente foi activo!");
+			}
 		}
 	}
 
-	public Notificador getNotificador() {
-		return notificador;
+	public List<Notificador> getNotificadores() {
+		return notificadores;
 	}
 
-	public void setNotificador(Notificador notificador) {
-		this.notificador = notificador;
+	public void setNotificadores(List<Notificador> notificadores) {
+		this.notificadores = notificadores;
 	}
 }
