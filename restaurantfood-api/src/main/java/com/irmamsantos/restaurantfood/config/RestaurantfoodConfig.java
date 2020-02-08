@@ -10,15 +10,15 @@ import com.irmamsantos.restaurantfood.di.service.AtivacaoClienteService;
 //@Configuration
 public class RestaurantfoodConfig {
 	
-	@Bean
-	public Notificador notificadorEmail() {
-		NotificadorEmail notificadorEmail = new NotificadorEmail("stmp.restaurantfoodmail.com.pt");
-		notificadorEmail.setUpperCase(false);
-		return notificadorEmail;
-	}
-	
-	@Bean
-	public AtivacaoClienteService ativacaoClienteService() {
-		return new AtivacaoClienteService(notificadorEmail());	
-	}
+//	@Bean
+//	public Notificador notificadorEmail() {
+//		NotificadorEmail notificadorEmail = new NotificadorEmail("stmp.restaurantfoodmail.com.pt");
+//		notificadorEmail.setUpperCase(false);
+//		return notificadorEmail;
+//	}
+//	
+//	@Bean
+//	public AtivacaoClienteService ativacaoClienteService() {
+//		return new AtivacaoClienteService(notificadorEmail());	
+//	}
 }
