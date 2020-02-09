@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import com.irmamsantos.restaurantfood.RestaurantfoodApiApplication;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 
-public class CriacaoCozinhaMain {
+public class AlteracaoCozinhaMain {
 	
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new SpringApplicationBuilder(RestaurantfoodApiApplication.class)
@@ -16,14 +16,11 @@ public class CriacaoCozinhaMain {
 		
 		CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
 		
-		Cozinha cozinha1 = new Cozinha();
-		cozinha1.setNome("Portuguesa");
+		Cozinha cozinha = new Cozinha();
+		cozinha.setId(1L);
+		cozinha.setNome("Brasileira");
 		
-		Cozinha cozinha2 = new Cozinha();
-		cozinha2.setNome("Japonesa");
-		
-		cadastroCozinha.salvar(cozinha1);
-		cadastroCozinha.salvar(cozinha2);
+		cadastroCozinha.salvar(cozinha);
 	}
 
 }
