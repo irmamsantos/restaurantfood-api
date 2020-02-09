@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.irmamsantos.restaurantfood.RestaurantfoodApiApplication;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
+import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
 
 public class CriacaoCozinhaMain {
 	
@@ -14,7 +15,7 @@ public class CriacaoCozinhaMain {
 				.web(WebApplicationType.NONE)
 				.run(args);
 		
-		CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
+		CozinhaRepository cozinhaRepository = applicationContext.getBean(CozinhaRepository.class);
 		
 		Cozinha cozinha1 = new Cozinha();
 		cozinha1.setNome("Portuguesa");
@@ -22,8 +23,8 @@ public class CriacaoCozinhaMain {
 		Cozinha cozinha2 = new Cozinha();
 		cozinha2.setNome("Japonesa");
 		
-		cadastroCozinha.salvar(cozinha1);
-		cadastroCozinha.salvar(cozinha2);
+		cozinhaRepository.adicionar(cozinha1);
+		cozinhaRepository.adicionar(cozinha2);
 	}
 
 }

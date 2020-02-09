@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.irmamsantos.restaurantfood.RestaurantfoodApiApplication;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
+import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
 
 public class RemocaoCozinhaMain {
 	
@@ -14,12 +15,12 @@ public class RemocaoCozinhaMain {
 				.web(WebApplicationType.NONE)
 				.run(args);
 		
-		CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
+		CozinhaRepository cozinhaRepository = applicationContext.getBean(CozinhaRepository.class);
 		
 		Cozinha cozinha = new Cozinha();
 		cozinha.setId(1L);
 		
-		cadastroCozinha.remover(cozinha);
+		cozinhaRepository.remover(cozinha);
 	}
 
 }
