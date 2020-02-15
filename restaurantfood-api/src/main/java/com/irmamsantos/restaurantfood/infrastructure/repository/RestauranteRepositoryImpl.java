@@ -34,8 +34,8 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
 	}
 	
 	@Transactional
-	public void remover(Restaurante restaurante) {
-		Restaurante restauranteApagar = porId(restaurante.getId());
+	public void remover(Long id) {
+		Restaurante restauranteApagar = porId(id);
 		manager.remove(restauranteApagar);
 	}
 
