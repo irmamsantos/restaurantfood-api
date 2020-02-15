@@ -2,8 +2,6 @@ package com.irmamsantos.restaurantfood.api.controller;
 
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.irmamsantos.restaurantfood.api.model.CozinhasXmlWrapper;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
 
@@ -25,10 +24,10 @@ public class CozinhaController {
 	public List<Cozinha> listar1() {
 		return cozinhaRepository.todas();
 	}
-
+	
 	@GetMapping(produces=MediaType.APPLICATION_XML_VALUE)
-	public List<Cozinha> listar2() {
-		return cozinhaRepository.todas();
+	public CozinhasXmlWrapper listarXML() {
+		return new CozinhasXmlWrapper(listar1());
 	}
 	
 	@GetMapping("/{cozinhaId}")
