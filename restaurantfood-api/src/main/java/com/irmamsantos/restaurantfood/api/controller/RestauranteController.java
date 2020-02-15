@@ -2,6 +2,7 @@ package com.irmamsantos.restaurantfood.api.controller;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,11 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
+import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 import com.irmamsantos.restaurantfood.domain.service.RestauranteService;
@@ -54,4 +57,19 @@ public class RestauranteController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
+	
+	@PutMapping("/{restauranteId}")
+	public ResponseEntity<?> actualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+		Restaurante restauranteActual = restauranteRepository.porId(restauranteId);
+		if (restauranteActual != null) {
+			BeanUtils.copyProperties(restaurante, restauranteActual, "id");
+			try {
+				restauranteService.salvar(restauranteActual);
+				return ResponseEntity.ok(restauranteActual);
+			} catch (EntidadeNaoEncontradaException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
+		}
+		return ResponseEntity.notFound().build();
+	} 
 }
