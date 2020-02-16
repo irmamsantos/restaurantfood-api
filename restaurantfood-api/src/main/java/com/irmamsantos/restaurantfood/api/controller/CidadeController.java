@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.model.Cidade;
-import com.irmamsantos.restaurantfood.domain.model.Cidade;
 import com.irmamsantos.restaurantfood.domain.repository.CidadeRepository;
 import com.irmamsantos.restaurantfood.domain.service.CidadeService;
 
