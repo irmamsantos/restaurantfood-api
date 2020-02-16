@@ -6,9 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 
@@ -36,6 +38,11 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
 	@Transactional
 	public void remover(Long id) {
 		Restaurante restauranteApagar = porId(id);
+		
+		if (restauranteApagar == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		
 		manager.remove(restauranteApagar);
 	}
 

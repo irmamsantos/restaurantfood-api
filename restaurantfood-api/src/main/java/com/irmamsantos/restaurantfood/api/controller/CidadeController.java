@@ -18,56 +18,56 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
-import com.irmamsantos.restaurantfood.domain.model.Restaurante;
-import com.irmamsantos.restaurantfood.domain.model.Restaurante;
-import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
-import com.irmamsantos.restaurantfood.domain.service.RestauranteService;
+import com.irmamsantos.restaurantfood.domain.model.Cidade;
+import com.irmamsantos.restaurantfood.domain.model.Cidade;
+import com.irmamsantos.restaurantfood.domain.repository.CidadeRepository;
+import com.irmamsantos.restaurantfood.domain.service.CidadeService;
 
 @RestController
-@RequestMapping(value = "/restaurantes") 
-public class RestauranteController {
+@RequestMapping(value = "/cidades") 
+public class CidadeController {
 	
 	@Autowired
-	private RestauranteRepository restauranteRepository; 
+	private CidadeRepository cidadeRepository; 
 	
 	@Autowired
-	private RestauranteService restauranteService; 
+	private CidadeService cidadeService; 
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<Restaurante> listar() {
-		return restauranteRepository.todas();
+	public List<Cidade> listar() {
+		return cidadeRepository.todas();
 	}
 	
-	@GetMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> buscar(@PathVariable("restauranteId") Long id) {
-		Restaurante restaurante = restauranteRepository.porId(id);
+	@GetMapping("/{cidadeId}")
+	public ResponseEntity<Cidade> buscar(@PathVariable("cidadeId") Long id) {
+		Cidade cidade = cidadeRepository.porId(id);
 		
-		if (restaurante != null) {
-			//return ResponseEntity.status(HttpStatus.OK).body(restaurante);
-			return ResponseEntity.ok(restaurante);
+		if (cidade != null) {
+			//return ResponseEntity.status(HttpStatus.OK).body(cidade);
+			return ResponseEntity.ok(cidade);
 		}
 		//return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
+	public ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
 		try {
-			restaurante = restauranteService.salvar(restaurante);
-			return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
+			cidade = cidadeService.salvar(cidade);
+			return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 	
-	@PutMapping("/{restauranteId}")
-	public ResponseEntity<?> actualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
-		Restaurante restauranteActual = restauranteRepository.porId(restauranteId);
-		if (restauranteActual != null) {
-			BeanUtils.copyProperties(restaurante, restauranteActual, "id");
+	@PutMapping("/{cidadeId}")
+	public ResponseEntity<?> actualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+		Cidade cidadeActual = cidadeRepository.porId(cidadeId);
+		if (cidadeActual != null) {
+			BeanUtils.copyProperties(cidade, cidadeActual, "id");
 			try {
-				restauranteService.salvar(restauranteActual);
-				return ResponseEntity.ok(restauranteActual);
+				cidadeService.salvar(cidadeActual);
+				return ResponseEntity.ok(cidadeActual);
 			} catch (EntidadeNaoEncontradaException e) {
 				return ResponseEntity.badRequest().body(e.getMessage());
 			}
@@ -75,11 +75,11 @@ public class RestauranteController {
 		return ResponseEntity.notFound().build();
 	} 
 	
-	@DeleteMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> remover(@PathVariable Long restauranteId) {
+	@DeleteMapping("/{cidadeId}")
+	public ResponseEntity<Cidade> remover(@PathVariable Long cidadeId) {
 		
 		try {
-			restauranteService.excluir(restauranteId);
+			cidadeService.excluir(cidadeId);
 			return ResponseEntity.noContent().build();
 			
 		} catch (EntidadeNaoEncontradaException e) {
@@ -88,5 +88,5 @@ public class RestauranteController {
 		} catch (EntidadeEmUsoException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
-	}
+	}	
 }

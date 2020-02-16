@@ -6,9 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.irmamsantos.restaurantfood.domain.model.Estado;
 import com.irmamsantos.restaurantfood.domain.model.Estado;
 import com.irmamsantos.restaurantfood.domain.repository.EstadoRepository;
 
@@ -34,8 +36,13 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 	}
 	
 	@Transactional
-	public void remover(Estado estado) {
-		Estado estadoApagar = porId(estado.getId());
+	public void remover(Long id) {
+		Estado estadoApagar = porId(id);
+		
+		if (estadoApagar == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		
 		manager.remove(estadoApagar);
 	}
 
