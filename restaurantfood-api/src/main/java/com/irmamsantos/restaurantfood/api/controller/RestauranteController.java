@@ -3,6 +3,7 @@ package com.irmamsantos.restaurantfood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +40,16 @@ public class RestauranteController {
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
 	public List<Restaurante> listar() {
-		return restauranteRepository.todas();
+		return restauranteRepository.findAll();
 	}
 	
 	@GetMapping("/{restauranteId}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable("restauranteId") Long id) {
-		Restaurante restaurante = restauranteRepository.porId(id);
+		Optional<Restaurante> restaurante = restauranteRepository.findById(id);
 		
-		if (restaurante != null) {
+		if (restaurante.isPresent()) {
 			//return ResponseEntity.status(HttpStatus.OK).body(restaurante);
-			return ResponseEntity.ok(restaurante);
+			return ResponseEntity.ok(restaurante.get());
 		}
 		//return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		return ResponseEntity.notFound().build();
@@ -66,11 +67,11 @@ public class RestauranteController {
 	
 	@PutMapping("/{restauranteId}")
 	public ResponseEntity<?> actualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
-		Restaurante restauranteActual = restauranteRepository.porId(restauranteId);
-		if (restauranteActual != null) {
-			BeanUtils.copyProperties(restaurante, restauranteActual, "id");
+		Optional<Restaurante> restauranteActual = restauranteRepository.findById(restauranteId);
+		if (restauranteActual.isPresent()) {
+			BeanUtils.copyProperties(restaurante, restauranteActual.get(), "id");
 			try {
-				restauranteService.salvar(restauranteActual);
+				restauranteService.salvar(restauranteActual.get());
 				return ResponseEntity.ok(restauranteActual);
 			} catch (EntidadeNaoEncontradaException e) {
 				return ResponseEntity.badRequest().body(e.getMessage());
@@ -83,14 +84,14 @@ public class RestauranteController {
 	public ResponseEntity<?> actualizarParcial(@PathVariable Long restauranteId, 
 			@RequestBody Map<String, Object> campos) {
 		
-		Restaurante restauranteActual = restauranteRepository.porId(restauranteId);
-		if (restauranteActual == null) {
+		Optional<Restaurante> restauranteActual = restauranteRepository.findById(restauranteId);
+		if (restauranteActual.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		merge(campos, restauranteActual);
+		merge(campos, restauranteActual.get());
 		
-		return actualizar(restauranteId, restauranteActual);
+		return actualizar(restauranteId, restauranteActual.get());
 	}
 
 	@DeleteMapping("/{restauranteId}")

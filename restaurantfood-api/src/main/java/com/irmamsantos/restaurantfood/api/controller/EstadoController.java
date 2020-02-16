@@ -1,6 +1,7 @@
 package com.irmamsantos.restaurantfood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +35,16 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<Estado> listar() {
-		return estadoRepository.todas();
+		return estadoRepository.findAll();
 	}
 	
 	@GetMapping("/{estadoId}")
 	public ResponseEntity<Estado> buscar(@PathVariable("estadoId") Long id) {
-		Estado estado = estadoRepository.porId(id);
+		Optional<Estado> estado = estadoRepository.findById(id);
 		
-		if (estado != null) {
+		if (estado.isPresent()) {
 			//return ResponseEntity.status(HttpStatus.OK).body(estado);
-			return ResponseEntity.ok(estado);
+			return ResponseEntity.ok(estado.get());
 		}
 		//return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		return ResponseEntity.notFound().build();
@@ -57,11 +58,11 @@ public class EstadoController {
 	
 	@PutMapping("/{estadoId}")
 	public ResponseEntity<Estado> actualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
-		Estado estadoActual = estadoRepository.porId(estadoId);
-		if (estadoActual != null) {
-			BeanUtils.copyProperties(estado, estadoActual, "id");
-			estadoService.salvar(estadoActual);
-			return ResponseEntity.ok(estadoActual);
+		Optional<Estado> estadoActual = estadoRepository.findById(estadoId);
+		if (estadoActual.isPresent()) {
+			BeanUtils.copyProperties(estado, estadoActual.get(), "id");
+			Estado estadoSalvo = estadoService.salvar(estadoActual.get());
+			return ResponseEntity.ok(estadoSalvo);
 		}
 		return ResponseEntity.notFound().build();
 	} 

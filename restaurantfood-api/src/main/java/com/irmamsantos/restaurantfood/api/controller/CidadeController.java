@@ -1,6 +1,7 @@
 package com.irmamsantos.restaurantfood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +35,16 @@ public class CidadeController {
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
 	public List<Cidade> listar() {
-		return cidadeRepository.todas();
+		return cidadeRepository.findAll();
 	}
 	
 	@GetMapping("/{cidadeId}")
 	public ResponseEntity<Cidade> buscar(@PathVariable("cidadeId") Long id) {
-		Cidade cidade = cidadeRepository.porId(id);
+		Optional<Cidade> cidade = cidadeRepository.findById(id);
 		
-		if (cidade != null) {
+		if (cidade.isPresent()) {
 			//return ResponseEntity.status(HttpStatus.OK).body(cidade);
-			return ResponseEntity.ok(cidade);
+			return ResponseEntity.ok(cidade.get());
 		}
 		//return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		return ResponseEntity.notFound().build();
@@ -61,12 +62,12 @@ public class CidadeController {
 	
 	@PutMapping("/{cidadeId}")
 	public ResponseEntity<?> actualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-		Cidade cidadeActual = cidadeRepository.porId(cidadeId);
-		if (cidadeActual != null) {
-			BeanUtils.copyProperties(cidade, cidadeActual, "id");
+		Optional<Cidade> cidadeActual = cidadeRepository.findById(cidadeId);
+		if (cidadeActual.isPresent()) {
+			BeanUtils.copyProperties(cidade, cidadeActual.get(), "id");
 			try {
-				cidadeService.salvar(cidadeActual);
-				return ResponseEntity.ok(cidadeActual);
+				Cidade cidadeSalva = cidadeService.salvar(cidadeActual.get());
+				return ResponseEntity.ok(cidadeSalva);
 			} catch (EntidadeNaoEncontradaException e) {
 				return ResponseEntity.badRequest().body(e.getMessage());
 			}
