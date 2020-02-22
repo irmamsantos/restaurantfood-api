@@ -14,6 +14,10 @@ import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
+import com.irmamsantos.restaurantfood.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
+import com.irmamsantos.restaurantfood.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
+
+import lombok.var;
 
 @RestController
 @RequestMapping("/teste")
@@ -77,4 +81,13 @@ public class TesteController {
 	public Integer countRestaurantesPorCozinha(@RequestParam("cozinhaId") Long cozinhaId) {
 		return restauranteRepository.countByCozinhaId(cozinhaId);
 	}
+	
+	@GetMapping("/restaurantes/com-frete-gratis")
+	public List<Restaurante> restaurantesComFreteGratis(String nome) {
+		
+		var comFreteGratis = new RestauranteComFreteGratisSpec();
+		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+		
+		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+	}	
 }
