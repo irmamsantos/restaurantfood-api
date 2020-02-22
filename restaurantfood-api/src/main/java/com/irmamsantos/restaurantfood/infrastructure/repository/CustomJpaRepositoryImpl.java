@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import com.irmamsantos.restaurantfood.domain.repository.CustomJpaRepository;
 
-import lombok.var;
-
 public class CustomJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> 
 				implements CustomJpaRepository<T, ID> {
 	
@@ -24,7 +22,7 @@ public class CustomJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID>
 
 	@Override
 	public Optional<T> buscarPrimeiro() {
-		var jpql = "from " + getDomainClass().getName();
+		String jpql = "from " + getDomainClass().getName();
 		
 		T entity = manager.createQuery(jpql, getDomainClass())
 				.setMaxResults(1)

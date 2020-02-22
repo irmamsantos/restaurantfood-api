@@ -24,8 +24,6 @@ import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepositoryQueries;
 
-import lombok.var;
-
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
@@ -43,7 +41,7 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 		CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
 		Root<Restaurante> root = criteria.from(Restaurante.class);
 		
-		var predicates = new ArrayList<Predicate>();
+		List<Predicate> predicates = new ArrayList<Predicate>();
 	
 		if (StringUtils.hasText(nome)) {
 			predicates.add(builder.like(root.get("nome"), "%" + nome + "%"));
