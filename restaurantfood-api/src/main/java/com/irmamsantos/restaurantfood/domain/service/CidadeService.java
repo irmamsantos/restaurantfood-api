@@ -10,13 +10,10 @@ import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaExce
 import com.irmamsantos.restaurantfood.domain.model.Cidade;
 import com.irmamsantos.restaurantfood.domain.model.Estado;
 import com.irmamsantos.restaurantfood.domain.repository.CidadeRepository;
-import com.irmamsantos.restaurantfood.domain.repository.EstadoRepository;
 
 @Service
 public class CidadeService {
 	
-	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe cadastro de estado com código %d";
-
 	private static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode removida, pois está em uso";
 
 	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe cadastro de cidade com código %d";
@@ -25,13 +22,16 @@ public class CidadeService {
 	private CidadeRepository cidadeRepository;
 	
 	@Autowired
-	private EstadoRepository estadoRepository; 
+	private EstadoService estadoService; 
 
 	public Cidade salvar(Cidade cidade) throws EntidadeNaoEncontradaException {
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = estadoRepository.findById(estadoId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(
-						String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
+		
+		Estado estado = estadoService.buscarOuFalhar(estadoId);
+		
+//		Estado estado = estadoRepository.findById(estadoId)
+//				.orElseThrow(() -> new EntidadeNaoEncontradaException(
+//						String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
 		
 		cidade.setEstado(estado);
 		

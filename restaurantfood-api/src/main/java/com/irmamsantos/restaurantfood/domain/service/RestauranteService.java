@@ -9,7 +9,6 @@ import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
-import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 
 @Service
@@ -21,20 +20,20 @@ public class RestauranteService {
 	private static final String MSG_RESTAURANTE_NAO_ENCONTRADO = 
 			"Não existe cadastro de restaurante com código %d";
 
-	private static final String MSG_COZINHA_NAO_ENCONTRADA = 
-			"Não existe cadastro de cozinha com código %d";
-
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	private CozinhaRepository cozinhaRepository; 
+	private CozinhaService cozinhaService; 
 
 	public Restaurante salvar(Restaurante restaurante) throws EntidadeNaoEncontradaException {
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(
-						String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
+		
+		Cozinha cozinha = cozinhaService.buscarOuFalhar(cozinhaId);
+		
+//		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
+//				.orElseThrow(() -> new EntidadeNaoEncontradaException(
+//						String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
 		
 		restaurante.setCozinha(cozinha);
 		
