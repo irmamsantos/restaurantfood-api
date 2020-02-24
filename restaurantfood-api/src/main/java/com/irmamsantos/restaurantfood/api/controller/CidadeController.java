@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.irmamsantos.restaurantfood.domain.exception.CidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
-import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
+import com.irmamsantos.restaurantfood.domain.exception.EstadoNaoEncontradoException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.model.Cidade;
 import com.irmamsantos.restaurantfood.domain.repository.CidadeRepository;
@@ -40,25 +41,24 @@ public class CidadeController {
 	
 	@GetMapping("/{cidadeId}")
 	public Cidade buscar(@PathVariable("cidadeId") Long id) 
-			throws EntidadeNaoEncontradaException {
+			throws CidadeNaoEncontradaException {
 		
 		return cidadeService.buscarOuFalhar(id);
 	}
 	
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody Cidade cidade) 
-			throws EntidadeNaoEncontradaException, NegocioException {
+	public Cidade adicionar(@RequestBody Cidade cidade) throws NegocioException {
 		try {
 			return cidadeService.salvar(cidade);
-		} catch (EntidadeNaoEncontradaException e) {
+		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 	
 	@PutMapping("/{cidadeId}")
 	public Cidade actualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) 
-			throws EntidadeNaoEncontradaException, NegocioException {
+			throws CidadeNaoEncontradaException, NegocioException {
 		
 		Cidade cidadeActual = cidadeService.buscarOuFalhar(cidadeId);
 		
@@ -66,7 +66,7 @@ public class CidadeController {
 		
 		try {
 			return cidadeService.salvar(cidadeActual);
-		} catch (EntidadeNaoEncontradaException e) {
+		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	} 
@@ -74,7 +74,7 @@ public class CidadeController {
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(value=HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cidadeId) 
-			throws EntidadeNaoEncontradaException, EntidadeEmUsoException {
+			throws CidadeNaoEncontradaException, EntidadeEmUsoException {
 		cidadeService.excluir(cidadeId);
 	}
 	

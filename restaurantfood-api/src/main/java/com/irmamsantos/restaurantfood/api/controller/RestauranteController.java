@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.irmamsantos.restaurantfood.domain.exception.CozinhaNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
+import com.irmamsantos.restaurantfood.domain.exception.RestauranteNaoEncontradoException;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 import com.irmamsantos.restaurantfood.domain.service.RestauranteService;
@@ -56,7 +58,7 @@ public class RestauranteController {
 	
 	@GetMapping("/{restauranteId}")
 	public Restaurante buscar(@PathVariable("restauranteId") Long id) 
-			throws EntidadeNaoEncontradaException {
+			throws RestauranteNaoEncontradoException {
 		
 		return restauranteService.buscarOuFalhar(id);
 /*		
@@ -74,17 +76,17 @@ public class RestauranteController {
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public Restaurante adicionar(@RequestBody Restaurante restaurante)
-			throws EntidadeNaoEncontradaException, NegocioException {
+			throws NegocioException {
 		try {
 			return restauranteService.salvar(restaurante);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage());
+		} catch (CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 	
 	@PutMapping("/{restauranteId}")
 	public Restaurante actualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante)
-			throws EntidadeNaoEncontradaException, NegocioException {
+			throws RestauranteNaoEncontradoException, NegocioException {
 
 		Restaurante restauranteActual = restauranteService.buscarOuFalhar(restauranteId);
 
@@ -94,7 +96,7 @@ public class RestauranteController {
 		try {
 			return restauranteService.salvar(restauranteActual);
 		} catch (EntidadeNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage());
+			throw new NegocioException(e.getMessage(), e);
 		}
 /*		
 		Optional<Restaurante> restauranteActual = restauranteRepository.findById(restauranteId);
@@ -115,7 +117,7 @@ public class RestauranteController {
 	@PatchMapping("/{restauranteId}")
 	public Restaurante actualizarParcial(@PathVariable Long restauranteId, 
 			@RequestBody Map<String, Object> campos) 
-					throws EntidadeNaoEncontradaException, NegocioException {
+					throws RestauranteNaoEncontradoException, NegocioException {
 		
 		Restaurante restauranteActual = restauranteService.buscarOuFalhar(restauranteId);
 		
@@ -137,7 +139,7 @@ public class RestauranteController {
 	@DeleteMapping("/{restauranteId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long restauranteId) 
-			throws EntidadeNaoEncontradaException, EntidadeEmUsoException {
+			throws RestauranteNaoEncontradoException, EntidadeEmUsoException {
 		restauranteService.excluir(restauranteId);
 /*		
 		try {

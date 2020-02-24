@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.irmamsantos.restaurantfood.api.model.CozinhasXmlWrapper;
+import com.irmamsantos.restaurantfood.domain.exception.CozinhaNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
-import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
@@ -45,7 +45,7 @@ public class CozinhaController {
 	}
 	
 	@GetMapping("/{cozinhaId}")
-	public Cozinha buscar(@PathVariable("cozinhaId") Long id) throws EntidadeNaoEncontradaException {
+	public Cozinha buscar(@PathVariable("cozinhaId") Long id) throws CozinhaNaoEncontradaException {
 		return cozinhaService.buscarOuFalhar(id);
 /*		
 		Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
@@ -67,7 +67,7 @@ public class CozinhaController {
 	
 	@PutMapping("/{cozinhaId}")
 	public Cozinha actualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha)
-			throws EntidadeNaoEncontradaException, NegocioException {
+			throws CozinhaNaoEncontradaException, NegocioException {
 
 		Cozinha cozinhaActual = cozinhaService.buscarOuFalhar(cozinhaId);
 
@@ -100,7 +100,7 @@ public class CozinhaController {
 	@DeleteMapping("/{cozinhaId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cozinhaId) 
-			throws EntidadeEmUsoException, EntidadeNaoEncontradaException {
+			throws EntidadeEmUsoException, CozinhaNaoEncontradaException {
 //		try {
 			cozinhaService.excluir(cozinhaId);
 //		} catch (EntidadeNaoEncontradaException e) {
