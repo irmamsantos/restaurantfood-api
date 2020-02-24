@@ -9,6 +9,6 @@ public class CidadeNaoEncontradaException extends EntidadeNaoEncontradaException
 	}
 	
 	public CidadeNaoEncontradaException(Long cidadeId) {
-		this(String.format("Cidade de código %d não pode removida, pois está em uso", cidadeId));
+		this(String.format("Não existe um cadastro de cidade com código %d", cidadeId));
 	}
 }

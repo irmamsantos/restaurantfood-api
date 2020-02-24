@@ -9,6 +9,6 @@ public class EstadoNaoEncontradoException extends EntidadeNaoEncontradaException
 	}
 	
 	public EstadoNaoEncontradoException(Long estadoId) {
-		this(String.format("Estado de código %d não pode removida, pois está em uso", estadoId));
+		this(String.format("Não existe um cadastro de estado com código %d", estadoId));
 	}
 }
