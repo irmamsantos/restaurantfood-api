@@ -3,7 +3,9 @@ package com.irmamsantos.restaurantfood.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
@@ -37,6 +39,10 @@ public class CidadeService {
 			cidadeRepository.deleteById(cidadeId);
 			
 		} catch (EmptyResultDataAccessException e) {
+			//alternativa mas não é uma exception de negócio
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
+//					String.format("Não existe cadastro de cidade com código %d", cidadeId));
+			
 			throw new EntidadeNaoEncontradaException(
 					String.format("Não existe cadastro de cidade com código %d", cidadeId));
 		} catch (DataIntegrityViolationException e) {
