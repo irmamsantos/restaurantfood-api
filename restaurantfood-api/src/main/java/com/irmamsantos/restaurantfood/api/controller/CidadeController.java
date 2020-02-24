@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
+import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.model.Cidade;
 import com.irmamsantos.restaurantfood.domain.repository.CidadeRepository;
 import com.irmamsantos.restaurantfood.domain.service.CidadeService;
@@ -47,19 +48,27 @@ public class CidadeController {
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public Cidade adicionar(@RequestBody Cidade cidade) 
-			throws EntidadeNaoEncontradaException {
-		return cidadeService.salvar(cidade);
+			throws EntidadeNaoEncontradaException, NegocioException {
+		try {
+			return cidadeService.salvar(cidade);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 	
 	@PutMapping("/{cidadeId}")
 	public Cidade actualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) 
-			throws EntidadeNaoEncontradaException {
+			throws EntidadeNaoEncontradaException, NegocioException {
 		
 		Cidade cidadeActual = cidadeService.buscarOuFalhar(cidadeId);
 		
 		BeanUtils.copyProperties(cidade, cidadeActual, "id");
 		
-		return cidadeService.salvar(cidadeActual);
+		try {
+			return cidadeService.salvar(cidadeActual);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	} 
 	
 	@DeleteMapping("/{cidadeId}")
