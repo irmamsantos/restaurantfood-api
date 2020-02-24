@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
+import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 import com.irmamsantos.restaurantfood.domain.service.RestauranteService;
@@ -72,21 +73,29 @@ public class RestauranteController {
 	
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Restaurante adicionar(@RequestBody Restaurante restaurante) 
-			throws EntidadeNaoEncontradaException {
-		return restauranteService.salvar(restaurante);
+	public Restaurante adicionar(@RequestBody Restaurante restaurante)
+			throws EntidadeNaoEncontradaException, NegocioException {
+		try {
+			return restauranteService.salvar(restaurante);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 	
 	@PutMapping("/{restauranteId}")
-	public Restaurante actualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) 
-			throws EntidadeNaoEncontradaException {
-		
+	public Restaurante actualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante)
+			throws EntidadeNaoEncontradaException, NegocioException {
+
 		Restaurante restauranteActual = restauranteService.buscarOuFalhar(restauranteId);
-		
-		BeanUtils.copyProperties(restaurante, restauranteActual, 
-				"id", "formasPagamento", "endereco", "dataCadastro", "dataAtualizacao", "produtos");
-		
-		return restauranteService.salvar(restauranteActual);
+
+		BeanUtils.copyProperties(restaurante, restauranteActual, "id", "formasPagamento", "endereco", 
+				"dataCadastro",	"dataAtualizacao", "produtos");
+
+		try {
+			return restauranteService.salvar(restauranteActual);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 /*		
 		Optional<Restaurante> restauranteActual = restauranteRepository.findById(restauranteId);
 		if (restauranteActual.isPresent()) {
@@ -105,7 +114,8 @@ public class RestauranteController {
 	
 	@PatchMapping("/{restauranteId}")
 	public Restaurante actualizarParcial(@PathVariable Long restauranteId, 
-			@RequestBody Map<String, Object> campos) throws EntidadeNaoEncontradaException {
+			@RequestBody Map<String, Object> campos) 
+					throws EntidadeNaoEncontradaException, NegocioException {
 		
 		Restaurante restauranteActual = restauranteService.buscarOuFalhar(restauranteId);
 		

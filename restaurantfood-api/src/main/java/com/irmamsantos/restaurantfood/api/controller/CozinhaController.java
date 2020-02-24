@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.irmamsantos.restaurantfood.api.model.CozinhasXmlWrapper;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
+import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
 import com.irmamsantos.restaurantfood.domain.service.CozinhaService;
@@ -66,14 +67,17 @@ public class CozinhaController {
 	
 	@PutMapping("/{cozinhaId}")
 	public Cozinha actualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha)
-			throws EntidadeNaoEncontradaException {
+			throws EntidadeNaoEncontradaException, NegocioException {
 
 		Cozinha cozinhaActual = cozinhaService.buscarOuFalhar(cozinhaId);
-		
+
 		BeanUtils.copyProperties(cozinha, cozinhaActual, "id");
-		
-		return cozinhaService.salvar(cozinhaActual);
-	} 
+//		try {
+			return cozinhaService.salvar(cozinhaActual);
+//		} catch (EntidadeNaoEncontradaException e) {
+//			throw new NegocioException(e.getMessage());
+//		}
+	}
 
 /*
 	@DeleteMapping("/{cozinhaId}")
