@@ -1,7 +1,5 @@
 package com.irmamsantos.restaurantfood.domain.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +15,15 @@ import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 @Service
 public class RestauranteService {
 	
+	private static final String MSG_RESTAURANTE_EM_USO = 
+			"Restaurante de código %d não pode removida, pois está em uso";
+
+	private static final String MSG_RESTAURANTE_NAO_ENCONTRADO = 
+			"Não existe cadastro de restaurante com código %d";
+
+	private static final String MSG_COZINHA_NAO_ENCONTRADA = 
+			"Não existe cadastro de cozinha com código %d";
+
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
@@ -27,7 +34,7 @@ public class RestauranteService {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
 				.orElseThrow(() -> new EntidadeNaoEncontradaException(
-						String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
+						String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
 		
 		restaurante.setCozinha(cozinha);
 		
@@ -40,10 +47,16 @@ public class RestauranteService {
 			
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe cadastro de restaurante com código %d", restauranteId));
+					String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId));
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Restaurante de código %d não pode removida, pois está em uso", restauranteId));
+					String.format(MSG_RESTAURANTE_EM_USO, restauranteId));
 		}
+	}
+	
+	public Restaurante buscarOuFalhar(Long restauranteId) throws EntidadeNaoEncontradaException {
+		return restauranteRepository.findById(restauranteId).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(
+						String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
 	}
 }
