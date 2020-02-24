@@ -6,15 +6,16 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
-import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
+import com.irmamsantos.restaurantfood.domain.exception.EstadoNaoEncontradoException;
 import com.irmamsantos.restaurantfood.domain.model.Estado;
 import com.irmamsantos.restaurantfood.domain.repository.EstadoRepository;
 
 @Service
 public class EstadoService {
 	
-	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe cadastro de estado com código %d";
-	
+	private static final String MSG_ESTADO_EM_USO = 
+			"Estado de código %d não pode removida, pois está em uso";
+
 	@Autowired
 	private EstadoRepository estadoRepository;
 
@@ -22,22 +23,20 @@ public class EstadoService {
 		return estadoRepository.save(estado);
 	}
 	
-	public void excluir(Long estadoId) throws EntidadeNaoEncontradaException, EntidadeEmUsoException {
+	public void excluir(Long estadoId) throws EstadoNaoEncontradoException, EntidadeEmUsoException {
 		try {
 			estadoRepository.deleteById(estadoId);
 			
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe cadastro de estado com código %d", estadoId));
+			throw new EstadoNaoEncontradoException(estadoId);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Estado de código %d não pode removida, pois está em uso", estadoId));
+					String.format(MSG_ESTADO_EM_USO, estadoId));
 		}
 	}
 	
-	public Estado buscarOuFalhar(Long estadoId) throws EntidadeNaoEncontradaException {
+	public Estado buscarOuFalhar(Long estadoId) throws EstadoNaoEncontradoException {
 		return estadoRepository.findById(estadoId).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(
-					String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
+				() -> new EstadoNaoEncontradoException(estadoId));
 	}
 }

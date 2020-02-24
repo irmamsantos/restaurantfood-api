@@ -11,4 +11,8 @@ public class NegocioException extends /*Runtime*/Exception {
 	public NegocioException(String mensagem) {
 		super(mensagem);
 	}
+	
+	public NegocioException(String mensagem, Throwable causa) {
+		super(mensagem, causa);
+	}
 }

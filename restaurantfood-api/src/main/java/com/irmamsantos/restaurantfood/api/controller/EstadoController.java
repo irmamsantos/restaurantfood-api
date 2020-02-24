@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
+import com.irmamsantos.restaurantfood.domain.exception.EstadoNaoEncontradoException;
+import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.model.Estado;
 import com.irmamsantos.restaurantfood.domain.repository.EstadoRepository;
 import com.irmamsantos.restaurantfood.domain.service.EstadoService;
@@ -56,18 +58,26 @@ public class EstadoController {
 	@ResponseStatus(code=HttpStatus.CREATED)
 	@PostMapping
 	public Estado adicionar(@RequestBody Estado estado) {
-		return estadoService.salvar(estado);
+//		try {
+			return estadoService.salvar(estado);
+//		} catch (EstadoNaoEncontradoException e) {
+//			throw new NegocioException(e.getMessage());
+//		}
 	}
 	
 	@PutMapping("/{estadoId}")
 	public Estado actualizar(@PathVariable Long estadoId, @RequestBody Estado estado) 
-			throws EntidadeNaoEncontradaException {
-		
-		Estado estadoActual = estadoService.buscarOuFalhar(estadoId);
-		
-		BeanUtils.copyProperties(estado, estadoActual, "id");
-		
-		return estadoService.salvar(estadoActual);
+			throws EntidadeNaoEncontradaException, NegocioException {
+		try {
+			Estado estadoActual = estadoService.buscarOuFalhar(estadoId);
+
+			BeanUtils.copyProperties(estado, estadoActual, "id");
+
+			return estadoService.salvar(estadoActual);
+			
+		} catch (EstadoNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage());
+		}
 		
 /*		
 		Optional<Estado> estadoActual = estadoRepository.findById(estadoId);
