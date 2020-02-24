@@ -13,6 +13,8 @@ import com.irmamsantos.restaurantfood.domain.repository.EstadoRepository;
 @Service
 public class EstadoService {
 	
+	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe cadastro de estado com código %d";
+	
 	@Autowired
 	private EstadoRepository estadoRepository;
 
@@ -31,5 +33,11 @@ public class EstadoService {
 			throw new EntidadeEmUsoException(
 					String.format("Estado de código %d não pode removida, pois está em uso", estadoId));
 		}
+	}
+	
+	public Estado buscarOuFalhar(Long estadoId) throws EntidadeNaoEncontradaException {
+		return estadoRepository.findById(estadoId).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(
+					String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
 	}
 }

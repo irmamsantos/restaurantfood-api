@@ -1,12 +1,10 @@
 package com.irmamsantos.restaurantfood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +37,11 @@ public class EstadoController {
 	}
 	
 	@GetMapping("/{estadoId}")
-	public ResponseEntity<Estado> buscar(@PathVariable("estadoId") Long id) {
+	public Estado buscar(@PathVariable("estadoId") Long id) 
+			throws EntidadeNaoEncontradaException {
+		
+		return estadoService.buscarOuFalhar(id);
+/*		
 		Optional<Estado> estado = estadoRepository.findById(id);
 		
 		if (estado.isPresent()) {
@@ -48,6 +50,7 @@ public class EstadoController {
 		}
 		//return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		return ResponseEntity.notFound().build();
+*/		
 	}
 	
 	@ResponseStatus(code=HttpStatus.CREATED)
@@ -57,7 +60,16 @@ public class EstadoController {
 	}
 	
 	@PutMapping("/{estadoId}")
-	public ResponseEntity<Estado> actualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+	public Estado actualizar(@PathVariable Long estadoId, @RequestBody Estado estado) 
+			throws EntidadeNaoEncontradaException {
+		
+		Estado estadoActual = estadoService.buscarOuFalhar(estadoId);
+		
+		BeanUtils.copyProperties(estado, estadoActual, "id");
+		
+		return estadoService.salvar(estadoActual);
+		
+/*		
 		Optional<Estado> estadoActual = estadoRepository.findById(estadoId);
 		if (estadoActual.isPresent()) {
 			BeanUtils.copyProperties(estado, estadoActual.get(), "id");
@@ -65,8 +77,18 @@ public class EstadoController {
 			return ResponseEntity.ok(estadoSalvo);
 		}
 		return ResponseEntity.notFound().build();
+*/		
 	} 
 	
+	@DeleteMapping("/{estadoId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long estadoId) 
+			throws EntidadeNaoEncontradaException, EntidadeEmUsoException {
+		
+		estadoService.excluir(estadoId);
+	}
+	
+/*	
 	@DeleteMapping("/{estadoId}")
 	public ResponseEntity<Estado> remover(@PathVariable Long estadoId) {
 		
@@ -81,5 +103,5 @@ public class EstadoController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
-
+*/
 }
