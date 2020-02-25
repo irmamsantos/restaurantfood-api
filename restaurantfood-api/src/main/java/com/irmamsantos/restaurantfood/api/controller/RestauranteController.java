@@ -65,7 +65,6 @@ public class RestauranteController {
 	@GetMapping("/{restauranteId}")
 	public Restaurante buscar(@PathVariable("restauranteId") Long id) 
 			throws RestauranteNaoEncontradoException {
-		
 		return restauranteService.buscarOuFalhar(id);
 /*		
 		Optional<Restaurante> restaurante = restauranteRepository.findById(id);
