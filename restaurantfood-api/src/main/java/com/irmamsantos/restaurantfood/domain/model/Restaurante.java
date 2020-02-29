@@ -21,6 +21,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -42,12 +44,12 @@ public class Restaurante {
 	private Long id;
 	
 	//@NotNull
-	@NotBlank(groups = Groups.CadastroRestaurante.class)
+	@NotBlank
 	@Column(nullable=false)
 	private String nome;
 	
 	//@DecimalMin("0")
-	@PositiveOrZero(groups = Groups.CadastroRestaurante.class)
+	@PositiveOrZero
 	@Column(name="taxa_frete", nullable=false)
 	private BigDecimal taxaFrete;
 	
@@ -55,7 +57,8 @@ public class Restaurante {
 	//para forçar que valide as propriedades do objecto "filho"
 	//têm de acrescentar anotação @valid
 	@Valid
-	@NotNull(groups = Groups.CadastroRestaurante.class)
+	@ConvertGroup(from= Default.class, to = Groups.CadastroRestaurante.class)
+	@NotNull
 	//@JsonIgnore
 	//@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch=FetchType.LAZY)
