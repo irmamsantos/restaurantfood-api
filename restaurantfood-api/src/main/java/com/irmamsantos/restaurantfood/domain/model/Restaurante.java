@@ -28,7 +28,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.irmamsantos.restaurantfood.core.validation.Groups;
-import com.irmamsantos.restaurantfood.core.validation.TaxaFrete;
+import com.irmamsantos.restaurantfood.core.validation.Multiplo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -50,7 +50,8 @@ public class Restaurante {
 	
 	//@DecimalMin("0")
 	//@PositiveOrZero(message = "{taxaFrete.invalida}")
-	@TaxaFrete
+	//@TaxaFrete
+	@Multiplo(numero=5)
 	@Column(name="taxa_frete", nullable=false)
 	private BigDecimal taxaFrete;
 	
