@@ -1,4 +1,4 @@
-package com.irmamsantos.restaurantfood;
+package com.irmamsantos.restaurantfood.core.validation;
 
 public interface Groups {
 	public interface CozinhaId {}

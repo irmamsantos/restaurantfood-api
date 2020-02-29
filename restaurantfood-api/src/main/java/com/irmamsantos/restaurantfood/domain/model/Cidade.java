@@ -13,8 +13,8 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.irmamsantos.restaurantfood.Groups;
-import com.irmamsantos.restaurantfood.Groups.EstadoId;
+import com.irmamsantos.restaurantfood.core.validation.Groups;
+import com.irmamsantos.restaurantfood.core.validation.Groups.EstadoId;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
