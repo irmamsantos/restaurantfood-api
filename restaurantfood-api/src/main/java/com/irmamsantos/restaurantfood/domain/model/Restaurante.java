@@ -17,13 +17,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,13 +40,21 @@ public class Restaurante {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
+	//@NotNull
+	@NotBlank
 	@Column(nullable=false)
 	private String nome;
 	
+	@DecimalMin("0")
+	//@PositiveOrZero
 	@Column(name="taxa_frete", nullable=false)
 	private BigDecimal taxaFrete;
 	
+	//por omissao o bean validator não faz validação em cascata 
+	//para forçar que valide as propriedades do objecto "filho"
+	//têm de acrescentar anotação @valid
+	@Valid
+	@NotNull
 	//@JsonIgnore
 	//@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch=FetchType.LAZY)
