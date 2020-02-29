@@ -68,7 +68,7 @@ public class CozinhaController {
 	}
 	
 	@PutMapping("/{cozinhaId}")
-	public Cozinha actualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha)
+	public Cozinha actualizar(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha)
 			throws CozinhaNaoEncontradaException, NegocioException {
 
 		Cozinha cozinhaActual = cozinhaService.buscarOuFalhar(cozinhaId);

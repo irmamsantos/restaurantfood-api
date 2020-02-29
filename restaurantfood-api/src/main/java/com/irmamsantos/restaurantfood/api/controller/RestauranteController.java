@@ -97,7 +97,7 @@ public class RestauranteController {
 	}
 	
 	@PutMapping("/{restauranteId}")
-	public Restaurante actualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante)
+	public Restaurante actualizar(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante)
 			throws RestauranteNaoEncontradoException, NegocioException {
 
 		Restaurante restauranteActual = restauranteService.buscarOuFalhar(restauranteId);

@@ -57,7 +57,7 @@ public class Restaurante {
 	//para forçar que valide as propriedades do objecto "filho"
 	//têm de acrescentar anotação @valid
 	@Valid
-	@ConvertGroup(from= Default.class, to = Groups.CadastroRestaurante.class)
+	@ConvertGroup(from= Default.class, to = Groups.CozinhaId.class)
 	@NotNull
 	//@JsonIgnore
 	//@JsonIgnoreProperties("hibernateLazyInitializer")

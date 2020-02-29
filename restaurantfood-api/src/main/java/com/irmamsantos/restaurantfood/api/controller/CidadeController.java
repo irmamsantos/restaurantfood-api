@@ -2,6 +2,8 @@ package com.irmamsantos.restaurantfood.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +50,7 @@ public class CidadeController {
 	
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody Cidade cidade) throws NegocioException {
+	public Cidade adicionar(@RequestBody @Valid Cidade cidade) throws NegocioException {
 		try {
 			return cidadeService.salvar(cidade);
 		} catch (EstadoNaoEncontradoException e) {
@@ -57,7 +59,7 @@ public class CidadeController {
 	}
 	
 	@PutMapping("/{cidadeId}")
-	public Cidade actualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) 
+	public Cidade actualizar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) 
 			throws CidadeNaoEncontradaException, NegocioException {
 		
 		Cidade cidadeActual = cidadeService.buscarOuFalhar(cidadeId);

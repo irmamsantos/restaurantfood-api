@@ -2,6 +2,8 @@ package com.irmamsantos.restaurantfood.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,7 +59,7 @@ public class EstadoController {
 	
 	@ResponseStatus(code=HttpStatus.CREATED)
 	@PostMapping
-	public Estado adicionar(@RequestBody Estado estado) {
+	public Estado adicionar(@RequestBody @Valid Estado estado) {
 //		try {
 			return estadoService.salvar(estado);
 //		} catch (EstadoNaoEncontradoException e) {
@@ -66,7 +68,7 @@ public class EstadoController {
 	}
 	
 	@PutMapping("/{estadoId}")
-	public Estado actualizar(@PathVariable Long estadoId, @RequestBody Estado estado) 
+	public Estado actualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) 
 			throws EntidadeNaoEncontradaException, NegocioException {
 		try {
 			Estado estadoActual = estadoService.buscarOuFalhar(estadoId);
