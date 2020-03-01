@@ -21,7 +21,7 @@ public class CadastroCozinhaIntegrationTests {
 	private CozinhaService cadastroCozinha;
 
 	@Test
-	public void testarCadastroCozinhaComSucesso() {
+	public void deveAtribuirId_QuandoCadastrarCozinhaComDadosCorrectos() {
 		//cenário
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome("Chinesa");
@@ -35,7 +35,7 @@ public class CadastroCozinhaIntegrationTests {
 	}
 
 	@Test(expected = ConstraintViolationException.class)
-	public void testarCadastroCozinhaSemNome() {
+	public void deveFalhar_QuandoCadastrarCozinhaSemNome() {
 		//cenário
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
