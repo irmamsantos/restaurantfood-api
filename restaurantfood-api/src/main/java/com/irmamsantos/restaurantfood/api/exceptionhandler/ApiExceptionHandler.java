@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.irmamsantos.restaurantfood.core.validation.ValidacaoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
@@ -60,14 +61,24 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
+	@ExceptionHandler(ValidacaoException.class)
+	public ResponseEntity<?> tratarValidacaoException(
+			ValidacaoException ex, WebRequest request) {
+		return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), 
+				HttpStatus.BAD_REQUEST, request);
+	}
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
+	}
+
+	private ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult, 
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
 		String detail = "Um ou mais campos estão inválidos. Faça o preencimento correcto"
 				+ " e tente novamente.";
-		
-		BindingResult bindingResult = ex.getBindingResult();
 		
 		List<Problem.Object> problemObjects = bindingResult.getAllErrors().stream()
 				.map(objectError -> {
