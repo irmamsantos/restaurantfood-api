@@ -29,10 +29,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.irmamsantos.restaurantfood.core.validation.Groups;
 import com.irmamsantos.restaurantfood.core.validation.Multiplo;
+import com.irmamsantos.restaurantfood.core.validation.ValorZeroIncluiDescricao;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@ValorZeroIncluiDescricao(valorField = "taxaFrete", 
+	descricaoField = "nome", descricaoObrigatoria = "Frete Grátis")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
