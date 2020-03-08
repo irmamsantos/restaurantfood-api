@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
-import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,20 +12,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.irmamsantos.restaurantfood.domain.model.Cozinha;
+import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
+import com.irmamsantos.restaurantfood.util.DatabaseCleaner;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@TestPropertySource("/application-test.properties")
 public class CadastroCozinhaIT {
 	
 	@LocalServerPort
 	private int portParam;
 	
 	@Autowired
-	private Flyway flyway;
+	private DatabaseCleaner databaseCleaner;
+	
+	@Autowired
+	private CozinhaRepository cozinhaRepository;
 	
 	@Before
 	public void setUp() {
@@ -34,9 +42,8 @@ public class CadastroCozinhaIT {
 		RestAssured.port = portParam;
 		RestAssured.basePath = "/cozinhas";
 		
-		//carrega/reset os dados do ficheiro db\testdata\afterMigrate.sql em cada teste
-		//definido nesta classe
-		flyway.migrate();
+		databaseCleaner.clearTables();
+		PrepararDados();
 	}
 
 	//Exemplos de testes de API
@@ -52,19 +59,19 @@ public class CadastroCozinhaIT {
 	}
 	
 	@Test
-	public void deveConter4Cozinhas_QuandoConsultarCozinhas() {
+	public void deveConter2Cozinhas_QuandoConsultarCozinhas() {
 		
 		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
-			.body("", hasSize(4))
-			.body("nome", hasItems("Indiana", "Tailandesa"));
+			.body("", hasSize(2))
+			.body("nome", hasItems("Tailandesa", "Americana"));
 	}
 	
 	@Test
-	public void testRetornarStatus201_QuandoCadastrarCozinha() {
+	public void deveRetornarStatus201_QuandoCadastrarCozinha() {
 		
 		given()
 			.body("{ \"nome\" : \"Chinesa\" }")
@@ -74,7 +81,18 @@ public class CadastroCozinhaIT {
 			.post()
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
-	}	
+	}
+	
+	private void PrepararDados() {
+		Cozinha cozinha1 = new Cozinha();
+		cozinha1.setNome("Tailandesa");
+		cozinhaRepository.save(cozinha1);
+		
+		Cozinha cozinha2 = new Cozinha();
+		cozinha2.setNome("Americana");
+		cozinhaRepository.save(cozinha2);
+		
+	}
 	
 /* Exemplos de Testes de Integração
   	
