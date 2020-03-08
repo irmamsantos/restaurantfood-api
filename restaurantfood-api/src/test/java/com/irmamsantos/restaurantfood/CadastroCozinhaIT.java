@@ -1,6 +1,9 @@
 package com.irmamsantos.restaurantfood;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasItems;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +37,22 @@ public class CadastroCozinhaIT {
 			.get()
 		.then()
 			.statusCode(HttpStatus.OK.value());
+	}
+	
+	@Test
+	public void deveConter4Cozinhas_QuandoConsultarCozinhas() {
+		
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+		
+		given()
+			.basePath("/cozinhas")
+			.port(portParam)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.body("", hasSize(4))
+			.body("nome", hasItems("Indiana", "Tailandesa"));
 	}
 	
 /* Exemplos de Testes de Integração
