@@ -4,9 +4,11 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
+import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -23,11 +25,18 @@ public class CadastroCozinhaIT {
 	@LocalServerPort
 	private int portParam;
 	
+	@Autowired
+	private Flyway flyway;
+	
 	@Before
 	public void setUp() {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = portParam;
 		RestAssured.basePath = "/cozinhas";
+		
+		//carrega/reset os dados do ficheiro db\testdata\afterMigrate.sql em cada teste
+		//definido nesta classe
+		flyway.migrate();
 	}
 
 	//Exemplos de testes de API
@@ -53,6 +62,19 @@ public class CadastroCozinhaIT {
 			.body("", hasSize(4))
 			.body("nome", hasItems("Indiana", "Tailandesa"));
 	}
+	
+	@Test
+	public void testRetornarStatus201_QuandoCadastrarCozinha() {
+		
+		given()
+			.body("{ \"nome\" : \"Chinesa\" }")
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.post()
+		.then()
+			.statusCode(HttpStatus.CREATED.value());
+	}	
 	
 /* Exemplos de Testes de Integração
   	
