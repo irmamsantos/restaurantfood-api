@@ -1,24 +1,43 @@
 package com.irmamsantos.restaurantfood;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import javax.validation.ConstraintViolationException;
+import static io.restassured.RestAssured.given;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.irmamsantos.restaurantfood.domain.exception.CozinhaNaoEncontradaException;
-import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
-import com.irmamsantos.restaurantfood.domain.model.Cozinha;
-import com.irmamsantos.restaurantfood.domain.service.CozinhaService;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-public class CadastroCozinhaIntegrationTests {
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+public class CadastroCozinhaIT {
 	
+	@LocalServerPort
+	private int portParam;
+
+	//Exemplos de testes de API
+	@Test
+	public void deveRetornarStatus200_QuandoConsultarCozinhas() {
+		
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+		
+		given()
+			.basePath("/cozinhas")
+			.port(portParam)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.statusCode(HttpStatus.OK.value());
+	}
+	
+/* Exemplos de Testes de Integração
+  	
 	@Autowired
 	private CozinhaService cadastroCozinha;
 
@@ -62,5 +81,5 @@ public class CadastroCozinhaIntegrationTests {
 		
 		cadastroCozinha.excluir(100L);
 	}
-
+*/	
 }
