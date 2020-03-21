@@ -40,12 +40,10 @@ public class Usuario {
 	@Column(nullable = false)
 	private String senha;
 	
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition="datetime")
 	private LocalDateTime dataCadastro;
 	
-	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "usuario_grupo", 
 		joinColumns = @JoinColumn(name = "usuario_id"),
