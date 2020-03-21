@@ -1,6 +1,6 @@
 package com.irmamsantos.restaurantfood.api.model.mixinResta;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ public abstract class UsuarioMixin {
 	 */
 	
 	@JsonIgnore
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 	
 	@JsonIgnore
 	private List<Grupo> grupos = new ArrayList<>();		

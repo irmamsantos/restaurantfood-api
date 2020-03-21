@@ -1,6 +1,6 @@
 package com.irmamsantos.restaurantfood.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -291,7 +291,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 //	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
 //	public ResponseEntity<?> tratarHttpMediaTypeNotSupportedException() {
 //		Problema problema = Problema.builder()
-//				.dataHora(LocalDateTime.now())
+//				.dataHora(OffsetDateTime.now())
 //				.mensagem("O tipo de mídia não é aceito.").build();
 //		
 //		return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
@@ -306,14 +306,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			body = Problem.builder()
 					.title(status.getReasonPhrase())
 					.status(status.value())
-					.timestamp(LocalDateTime.now())
+					.timestamp(OffsetDateTime.now())
 					.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 					.build();
 		} else if (body instanceof String) {
 			body = Problem.builder()
 					.title((String) body)
 					.status(status.value())
-					.timestamp(LocalDateTime.now())
+					.timestamp(OffsetDateTime.now())
 					.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 					.build();
 		}
@@ -328,7 +328,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				.type(problemType.getUri())
 				.title(problemType.getTitle())
 				.detail(detail)
-				.timestamp(LocalDateTime.now());
+				.timestamp(OffsetDateTime.now());
 	}
 	
 	private String joinPath(List<Reference> references) {

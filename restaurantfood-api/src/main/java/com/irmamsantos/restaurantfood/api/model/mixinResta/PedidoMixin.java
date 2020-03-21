@@ -1,6 +1,6 @@
 package com.irmamsantos.restaurantfood.api.model.mixinResta;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -11,14 +11,14 @@ public abstract class PedidoMixin {
 	 */
 	
 	@JsonIgnore
-	private LocalDateTime dataCriacao;
+	private OffsetDateTime dataCriacao;
 	
 	@JsonIgnore
-	private LocalDateTime dataConfirmacao;
+	private OffsetDateTime dataConfirmacao;
 	
 	@JsonIgnore
-	private LocalDateTime dataCancelamento;
+	private OffsetDateTime dataCancelamento;
 
 	@JsonIgnore
-	private LocalDateTime dataEntrega;
+	private OffsetDateTime dataEntrega;
 }

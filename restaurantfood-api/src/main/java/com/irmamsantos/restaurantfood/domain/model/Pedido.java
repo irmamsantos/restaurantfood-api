@@ -1,7 +1,7 @@
 package com.irmamsantos.restaurantfood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,16 +40,16 @@ public class Pedido {
 	private BigDecimal valorTotal;
 	
 	@Column(nullable = false, columnDefinition="datetime")
-	private LocalDateTime dataCriacao;
+	private OffsetDateTime dataCriacao;
 	
 	@Column(columnDefinition="datetime")
-	private LocalDateTime dataConfirmacao;
+	private OffsetDateTime dataConfirmacao;
 	
 	@Column(columnDefinition="datetime")
-	private LocalDateTime dataCancelamento;
+	private OffsetDateTime dataCancelamento;
 
 	@Column(columnDefinition="datetime")
-	private LocalDateTime dataEntrega;
+	private OffsetDateTime dataEntrega;
 	
 	@ManyToOne
 	@JoinColumn(name="forma_pagamento_id", nullable = false)
