@@ -3,11 +3,11 @@ package com.irmamsantos.restaurantfood.core.jackson;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.irmamsantos.restaurantfood.api.model.mixinResta.CozinhaMixin;
-import com.irmamsantos.restaurantfood.api.model.mixinResta.GrupoMixin;
-import com.irmamsantos.restaurantfood.api.model.mixinResta.PedidoMixin;
-import com.irmamsantos.restaurantfood.api.model.mixinResta.RestauranteMixin;
-import com.irmamsantos.restaurantfood.api.model.mixinResta.UsuarioMixin;
+import com.irmamsantos.restaurantfood.api.model.mixin.CozinhaMixin;
+import com.irmamsantos.restaurantfood.api.model.mixin.GrupoMixin;
+import com.irmamsantos.restaurantfood.api.model.mixin.PedidoMixin;
+import com.irmamsantos.restaurantfood.api.model.mixin.RestauranteMixin;
+import com.irmamsantos.restaurantfood.api.model.mixin.UsuarioMixin;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.model.Grupo;
 import com.irmamsantos.restaurantfood.domain.model.Pedido;

@@ -1,4 +1,4 @@
-package com.irmamsantos.restaurantfood.api.model.mixinResta;
+package com.irmamsantos.restaurantfood.api.model.mixin;
 
 import java.util.ArrayList;
 import java.util.List;
