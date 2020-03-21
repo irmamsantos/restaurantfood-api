@@ -26,8 +26,6 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.irmamsantos.restaurantfood.core.validation.Groups;
 import com.irmamsantos.restaurantfood.core.validation.Multiplo;
 import com.irmamsantos.restaurantfood.core.validation.ValorZeroIncluiDescricao;
@@ -59,9 +57,6 @@ public class Restaurante {
 	@Column(name="taxa_frete", nullable=false)
 	private BigDecimal taxaFrete;
 	
-	//Pela classe restaurante o campo nome da cozinha não é permitido para save/update
-	//mas no get/read mostra o campo
-	@JsonIgnoreProperties(value="nome", allowGetters=true)
 	//por omissao o bean validator não faz validação em cascata 
 	//para forçar que valide as propriedades do objecto "filho"
 	//têm de acrescentar anotação @valid
@@ -74,28 +69,23 @@ public class Restaurante {
 	@JoinColumn(name="cozinha_id", nullable=false)
 	private Cozinha cozinha;
 	
-	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 	
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition="datetime")
 	private LocalDateTime dataCadastro;
 
-	@JsonIgnore
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition="datetime")
 	private LocalDateTime dataAtualizacao;
 	
-	//@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento", 
 		joinColumns = @JoinColumn(name = "restaurante_id"),
 		inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
 }
