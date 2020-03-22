@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.irmamsantos.restaurantfood.api.assembler.EstadoDTOAssembler;
+import com.irmamsantos.restaurantfood.api.assembler.EstadoInputDTODisassembler;
+import com.irmamsantos.restaurantfood.api.model.dto.input.EstadoInputDTO;
+import com.irmamsantos.restaurantfood.api.model.dto.output.EstadoDTO;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EstadoNaoEncontradoException;
@@ -35,16 +39,22 @@ public class EstadoController {
 	@Autowired
 	private EstadoService estadoService;
 	
+	@Autowired
+	private EstadoDTOAssembler estadoDTOAssembler;
+	
+	@Autowired
+	private EstadoInputDTODisassembler estadoInputDTODisassembler;	
+	
 	@GetMapping
-	public List<Estado> listar() {
-		return estadoRepository.findAll();
+	public List<EstadoDTO> listar() {
+		return estadoDTOAssembler.toCollectionDTO(estadoRepository.findAll());
 	}
 	
 	@GetMapping("/{estadoId}")
-	public Estado buscar(@PathVariable("estadoId") Long id) 
+	public EstadoDTO buscar(@PathVariable("estadoId") Long id) 
 			throws EntidadeNaoEncontradaException {
 		
-		return estadoService.buscarOuFalhar(id);
+		return estadoDTOAssembler.toDTO(estadoService.buscarOuFalhar(id));
 /*		
 		Optional<Estado> estado = estadoRepository.findById(id);
 		
@@ -59,23 +69,28 @@ public class EstadoController {
 	
 	@ResponseStatus(code=HttpStatus.CREATED)
 	@PostMapping
-	public Estado adicionar(@RequestBody @Valid Estado estado) {
+	public EstadoDTO adicionar(@RequestBody @Valid EstadoInputDTO estadoInput) {
 //		try {
-			return estadoService.salvar(estado);
+			Estado estado = estadoInputDTODisassembler.toDomainObject(estadoInput);
+		
+			return estadoDTOAssembler.toDTO(estadoService.salvar(estado));
 //		} catch (EstadoNaoEncontradoException e) {
 //			throw new NegocioException(e.getMessage());
 //		}
 	}
 	
 	@PutMapping("/{estadoId}")
-	public Estado actualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) 
+	public EstadoDTO actualizar(@PathVariable Long estadoId, 
+				@RequestBody @Valid EstadoInputDTO estadoInput) 
 			throws EntidadeNaoEncontradaException, NegocioException {
 		try {
 			Estado estadoActual = estadoService.buscarOuFalhar(estadoId);
 
-			BeanUtils.copyProperties(estado, estadoActual, "id");
+//			BeanUtils.copyProperties(estado, estadoActual, "id");
+			
+			estadoInputDTODisassembler.copyToDomainObject(estadoInput, estadoActual);
 
-			return estadoService.salvar(estadoActual);
+			return estadoDTOAssembler.toDTO(estadoService.salvar(estadoActual));
 			
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage());

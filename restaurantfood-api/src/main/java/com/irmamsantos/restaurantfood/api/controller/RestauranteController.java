@@ -57,10 +57,10 @@ public class RestauranteController {
 	private SmartValidator validator;
 	
 	@Autowired
-	RestauranteDTOAssembler restauranteDTOAssembler;
+	private RestauranteDTOAssembler restauranteDTOAssembler;
 	
 	@Autowired
-	RestauranteInputDTODisassembler restauranteInputDTODisassembler;	
+	private RestauranteInputDTODisassembler restauranteInputDTODisassembler;	
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
 	public List<RestauranteDTO> listar() {

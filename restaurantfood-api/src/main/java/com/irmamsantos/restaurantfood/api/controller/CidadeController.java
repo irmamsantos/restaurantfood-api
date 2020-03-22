@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.irmamsantos.restaurantfood.api.assembler.CidadeDTOAssembler;
+import com.irmamsantos.restaurantfood.api.assembler.CidadeInputDTODisassembler;
+import com.irmamsantos.restaurantfood.api.model.dto.input.CidadeInputDTO;
+import com.irmamsantos.restaurantfood.api.model.dto.output.CidadeDTO;
 import com.irmamsantos.restaurantfood.domain.exception.CidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EstadoNaoEncontradoException;
@@ -36,38 +40,50 @@ public class CidadeController {
 	@Autowired
 	private CidadeService cidadeService; 
 	
+	@Autowired
+	private CidadeDTOAssembler cidadeDTOAssembler;
+	
+	@Autowired
+	private CidadeInputDTODisassembler cidadeInputDTODisassembler;
+	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<Cidade> listar() {
-		return cidadeRepository.findAll();
+	public List<CidadeDTO> listar() {
+		return cidadeDTOAssembler.toCollectionDTO(cidadeRepository.findAll());
 	}
 	
 	@GetMapping("/{cidadeId}")
-	public Cidade buscar(@PathVariable("cidadeId") Long id) 
+	public CidadeDTO buscar(@PathVariable("cidadeId") Long id) 
 			throws CidadeNaoEncontradaException {
 		
-		return cidadeService.buscarOuFalhar(id);
+		return cidadeDTOAssembler.toDTO(cidadeService.buscarOuFalhar(id));
 	}
 	
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody @Valid Cidade cidade) throws NegocioException {
+	public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInput) throws NegocioException {
 		try {
-			return cidadeService.salvar(cidade);
+			Cidade cidade = cidadeInputDTODisassembler.toDomainObject(cidadeInput);
+			return cidadeDTOAssembler.toDTO(cidadeService.salvar(cidade));
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 	
 	@PutMapping("/{cidadeId}")
-	public Cidade actualizar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) 
+	public CidadeDTO actualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInputDTO cidadeInput) 
 			throws CidadeNaoEncontradaException, NegocioException {
 		
 		Cidade cidadeActual = cidadeService.buscarOuFalhar(cidadeId);
+	
+		//Para não estar identificar os campos que não quer copiar de forma explicita
+		//deixa de usar o BeansUtils e passa usar o ModelMapper em que o destino terá apenas os campos
+		//que pretende actualizar		
+//		BeanUtils.copyProperties(cidade, cidadeActual, "id");
 		
-		BeanUtils.copyProperties(cidade, cidadeActual, "id");
+		cidadeInputDTODisassembler.copyToDomainObject(cidadeInput, cidadeActual);
 		
 		try {
-			return cidadeService.salvar(cidadeActual);
+			return cidadeDTOAssembler.toDTO(cidadeService.salvar(cidadeActual));
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
