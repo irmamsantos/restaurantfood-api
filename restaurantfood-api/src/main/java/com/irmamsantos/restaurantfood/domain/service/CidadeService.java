@@ -43,6 +43,7 @@ public class CidadeService {
 	public void excluir(Long cidadeId) throws CidadeNaoEncontradaException, EntidadeEmUsoException {
 		try {
 			cidadeRepository.deleteById(cidadeId);
+			cidadeRepository.flush();
 			
 		} catch (EmptyResultDataAccessException e) {
 			//alternativa mas não é uma exception de negócio

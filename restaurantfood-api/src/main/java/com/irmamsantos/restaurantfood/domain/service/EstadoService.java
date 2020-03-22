@@ -29,6 +29,7 @@ public class EstadoService {
 	public void excluir(Long estadoId) throws EstadoNaoEncontradoException, EntidadeEmUsoException {
 		try {
 			estadoRepository.deleteById(estadoId);
+			estadoRepository.flush();
 			
 		} catch (EmptyResultDataAccessException e) {
 			throw new EstadoNaoEncontradoException(estadoId);
