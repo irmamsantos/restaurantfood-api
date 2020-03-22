@@ -120,9 +120,16 @@ public class RestauranteController {
 
 		Restaurante restauranteActual = restauranteService.buscarOuFalhar(restauranteId);
 
-		Restaurante restaurante = restauranteInputDTODisassembler.toDomainObject(restauranteInput);
-		BeanUtils.copyProperties(restaurante, restauranteActual, "id", "formasPagamento", "endereco", 
-				"dataCadastro",	"dataAtualizacao", "produtos");
+		//depois de remover BeansUtils também removeu esta invocação
+		//Restaurante restaurante = restauranteInputDTODisassembler.toDomainObject(restauranteInput);
+
+//Para não estar identificar os campos que não quer copiar de forma explicita
+//deixa de usar o BeansUtils e passa usar o ModelMapper em que o destino terá apenas os campos
+//que pretende actualizar		
+//		BeanUtils.copyProperties(restaurante, restauranteActual, "id", "formasPagamento", "endereco", 
+//				"dataCadastro",	"dataAtualizacao", "produtos");
+		
+		restauranteInputDTODisassembler.copyToDomainObject(restauranteInput, restauranteActual);
 
 		try {
 			return restauranteDTOAssembler.toDTO(restauranteService.salvar(restauranteActual));
