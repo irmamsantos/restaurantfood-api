@@ -205,6 +205,22 @@ public class RestauranteController {
 */		
 	}
 	
+	//PUT /restaurantes/{1}/ativo
+	//DELETE /restaurantes/{1}/ativo
+	
+	@PutMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativar(@PathVariable Long restauranteId) {
+		restauranteService.ativar(restauranteId);
+	}
+
+	@DeleteMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativar(@PathVariable Long restauranteId) {
+		restauranteService.inativar(restauranteId);
+	}
+	
+	
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
 
 		ServletServerHttpRequest httpRequest = new ServletServerHttpRequest(request);

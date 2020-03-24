@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class CidadeDTO {
+public class CidadeDTO /*CidadeModel*/{
 	
 	private Long id;
 

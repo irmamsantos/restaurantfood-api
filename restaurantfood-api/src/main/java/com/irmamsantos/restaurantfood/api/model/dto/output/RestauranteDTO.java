@@ -14,4 +14,5 @@ public class RestauranteDTO /*RestauranteModel*/{
 	private String nome;
 	private BigDecimal precoFrete;
 	private CozinhaDTO cozinha;
+	private Boolean ativo;
 }
