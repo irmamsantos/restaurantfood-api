@@ -2,8 +2,6 @@ package com.irmamsantos.restaurantfood.domain.service;
 
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -28,6 +26,9 @@ public class UsuarioService {
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
 		
+		//se o usuario já estiver a ser gerido pelo entity manager através do método buscar
+		//quando entra no método transacional faz o update antes do find, grava a informação não
+		//desejada e acaba por não fazer primeiro a validação, daí fazer detach do objecto no entity manager
 		usuarioRepository.detach(usuario);
 		
 		Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());

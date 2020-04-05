@@ -11,6 +11,7 @@ import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.RestauranteNaoEncontradoException;
 import com.irmamsantos.restaurantfood.domain.model.Cidade;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
+import com.irmamsantos.restaurantfood.domain.model.FormaPagamento;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 
@@ -31,6 +32,9 @@ public class RestauranteService {
 	
 	@Autowired
 	private CidadeService cidadeService; 	
+	
+	@Autowired
+	private FormaPagamentoService formaPagamentoService; 
 
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) throws CozinhaNaoEncontradaException {
@@ -82,4 +86,20 @@ public class RestauranteService {
 		return restauranteRepository.findById(restauranteId).orElseThrow(
 				() -> new RestauranteNaoEncontradoException(restauranteId));
 	}
+	
+	@Transactional
+	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restauranteActual = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		
+		restauranteActual.removerFormaPagamento(formaPagamento);	
+	}
+	
+	@Transactional
+	public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restauranteActual = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		
+		restauranteActual.adicionarFormaPagamento(formaPagamento);	
+	}	
 }

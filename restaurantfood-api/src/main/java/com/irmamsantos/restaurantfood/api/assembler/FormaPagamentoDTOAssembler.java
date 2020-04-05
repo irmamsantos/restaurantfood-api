@@ -1,5 +1,6 @@
 package com.irmamsantos.restaurantfood.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class FormaPagamentoDTOAssembler {
 		return modelMapper.map(formaPagamento, FormaPagamentoDTO.class);
 	}
 	
-	public List<FormaPagamentoDTO> toCollectionDTO(List<FormaPagamento> formaPagamentos) {
+	public List<FormaPagamentoDTO> toCollectionDTO(Collection<FormaPagamento> formaPagamentos) {
 		return formaPagamentos.stream()
 				.map(formaPagamento -> toDTO(formaPagamento))
 				.collect(Collectors.toList());
