@@ -22,7 +22,7 @@ import com.irmamsantos.restaurantfood.api.model.dto.input.FormaPagamentoInputDTO
 import com.irmamsantos.restaurantfood.api.model.dto.output.FormaPagamentoDTO;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
-import com.irmamsantos.restaurantfood.domain.exception.FormaPagamentoNaoEncontradoException;
+import com.irmamsantos.restaurantfood.domain.exception.FormaPagamentoNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.model.FormaPagamento;
 import com.irmamsantos.restaurantfood.domain.repository.FormaPagamentoRepository;
@@ -75,7 +75,7 @@ public class FormaPagamentoController {
 
 			return formaPagamentoDTOAssembler.toDTO(formaPagamentoService.salvar(formaPagamentoActual));
 			
-		} catch (FormaPagamentoNaoEncontradoException e) {
+		} catch (FormaPagamentoNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	} 

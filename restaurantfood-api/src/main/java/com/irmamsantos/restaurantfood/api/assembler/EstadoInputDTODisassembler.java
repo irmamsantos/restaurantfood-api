@@ -4,9 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.irmamsantos.restaurantfood.api.model.dto.input.CozinhaInputDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.input.EstadoInputDTO;
-import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.model.Estado;
 
 @Component

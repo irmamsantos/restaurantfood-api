@@ -1,7 +1,4 @@
 package com.irmamsantos.restaurantfood.api.controller;
-import static com.irmamsantos.restaurantfood.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
-import static com.irmamsantos.restaurantfood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;

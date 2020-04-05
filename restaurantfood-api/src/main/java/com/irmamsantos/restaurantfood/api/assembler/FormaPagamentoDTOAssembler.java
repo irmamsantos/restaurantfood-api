@@ -7,9 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.irmamsantos.restaurantfood.api.model.dto.output.EstadoDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.output.FormaPagamentoDTO;
-import com.irmamsantos.restaurantfood.domain.model.Estado;
 import com.irmamsantos.restaurantfood.domain.model.FormaPagamento;
 
 @Component
