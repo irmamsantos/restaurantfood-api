@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.exception.UsuarioNaoEncontradoException;
+import com.irmamsantos.restaurantfood.domain.model.Grupo;
 import com.irmamsantos.restaurantfood.domain.model.Usuario;
 import com.irmamsantos.restaurantfood.domain.repository.UsuarioRepository;
 
@@ -22,6 +23,9 @@ public class UsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private GrupoService grupoService;
 	
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
@@ -71,4 +75,20 @@ public class UsuarioService {
         
         usuario.setSenha(novaSenha);
     }
+	
+	@Transactional
+	public void desassociarGrupo(Long usuarioId, Long grupoId) {
+		Usuario usuarioActual = buscarOuFalhar(usuarioId);
+		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
+		
+		usuarioActual.removerGrupo(grupo);	
+	}
+	
+	@Transactional
+	public void associarGrupo(Long usuarioId, Long grupoId) {
+		Usuario usuarioActual = buscarOuFalhar(usuarioId);
+		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
+		
+		usuarioActual.adicionarGrupo(grupo);	
+	}	
 }
