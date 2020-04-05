@@ -12,8 +12,8 @@ import com.irmamsantos.restaurantfood.domain.exception.RestauranteNaoEncontradoE
 import com.irmamsantos.restaurantfood.domain.model.Cidade;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.model.FormaPagamento;
-import com.irmamsantos.restaurantfood.domain.model.Produto;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
+import com.irmamsantos.restaurantfood.domain.model.Usuario;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 
 @Service
@@ -39,6 +39,9 @@ public class RestauranteService {
 	
 	@Autowired
 	private ProdutoService produtoService; 	
+	
+	@Autowired
+	private UsuarioService usuarioService; 	
 
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) throws CozinhaNaoEncontradaException {
@@ -119,5 +122,21 @@ public class RestauranteService {
 		Restaurante restauranteActual = buscarOuFalhar(restauranteId);
 		
 		restauranteActual.fechar();
+	}
+	
+	@Transactional
+	public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
+		Restaurante restauranteActual = buscarOuFalhar(restauranteId);
+		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+		
+		restauranteActual.removerResponsavel(usuario);	
+	}
+	
+	@Transactional
+	public void associarResponsavel(Long restauranteId, Long usuarioId) {
+		Restaurante restauranteActual = buscarOuFalhar(restauranteId);
+		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+		
+		restauranteActual.adicionarResponsavel(usuario);	
 	}	
 }
