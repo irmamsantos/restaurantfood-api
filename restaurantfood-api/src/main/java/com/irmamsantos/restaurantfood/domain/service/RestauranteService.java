@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.irmamsantos.restaurantfood.domain.exception.CozinhaNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.RestauranteNaoEncontradoException;
+import com.irmamsantos.restaurantfood.domain.model.Cidade;
 import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
@@ -27,18 +28,24 @@ public class RestauranteService {
 	
 	@Autowired
 	private CozinhaService cozinhaService; 
+	
+	@Autowired
+	private CidadeService cidadeService; 	
 
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) throws CozinhaNaoEncontradaException {
 		Long cozinhaId = restaurante.getCozinha().getId();
+		Long cidadeId = restaurante.getEndereco().getCidade().getId();
 		
 		Cozinha cozinha = cozinhaService.buscarOuFalhar(cozinhaId);
+		Cidade cidade = cidadeService.buscarOuFalhar(cidadeId);
 		
 //		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
 //				.orElseThrow(() -> new EntidadeNaoEncontradaException(
 //						String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
 		
 		restaurante.setCozinha(cozinha);
+		restaurante.getEndereco().setCidade(cidade);
 		
 		return restauranteRepository.save(restaurante);
 	}

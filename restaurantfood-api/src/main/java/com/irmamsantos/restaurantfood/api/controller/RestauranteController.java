@@ -34,6 +34,7 @@ import com.irmamsantos.restaurantfood.api.assembler.RestauranteInputDTODisassemb
 import com.irmamsantos.restaurantfood.api.model.dto.input.RestauranteInputDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.output.RestauranteDTO;
 import com.irmamsantos.restaurantfood.core.validation.ValidacaoException;
+import com.irmamsantos.restaurantfood.domain.exception.CidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.CozinhaNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
@@ -107,7 +108,8 @@ public class RestauranteController {
 		try {
 			Restaurante restaurante = restauranteInputDTODisassembler.toDomainObject(restauranteInput);
 			return restauranteDTOAssembler.toDTO(restauranteService.salvar(restaurante));
-		} catch (CozinhaNaoEncontradaException e) {
+			//Alterei de EntidadeNaoEncontradaException para estes 2 para ficar igual ao leccionado 
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
@@ -132,7 +134,8 @@ public class RestauranteController {
 
 		try {
 			return restauranteDTOAssembler.toDTO(restauranteService.salvar(restauranteActual));
-		} catch (EntidadeNaoEncontradaException e) {
+		//Alterei de EntidadeNaoEncontradaException para estes 2 para ficar igual ao leccionado 
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 /*		
