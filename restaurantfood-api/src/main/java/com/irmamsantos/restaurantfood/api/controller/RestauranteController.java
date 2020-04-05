@@ -37,7 +37,6 @@ import com.irmamsantos.restaurantfood.core.validation.ValidacaoException;
 import com.irmamsantos.restaurantfood.domain.exception.CidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.CozinhaNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
-import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.exception.RestauranteNaoEncontradoException;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;

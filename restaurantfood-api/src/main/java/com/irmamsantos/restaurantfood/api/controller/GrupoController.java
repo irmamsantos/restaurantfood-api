@@ -19,15 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.irmamsantos.restaurantfood.api.assembler.GrupoDTOAssembler;
 import com.irmamsantos.restaurantfood.api.assembler.GrupoInputDTODisassembler;
-import com.irmamsantos.restaurantfood.api.model.dto.input.CozinhaInputDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.input.GrupoInputDTO;
-import com.irmamsantos.restaurantfood.api.model.dto.output.CozinhaDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.output.GrupoDTO;
-import com.irmamsantos.restaurantfood.domain.exception.CozinhaNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.exception.EntidadeEmUsoException;
 import com.irmamsantos.restaurantfood.domain.exception.GrupoNaoEncontradoException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
-import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.model.Grupo;
 import com.irmamsantos.restaurantfood.domain.repository.GrupoRepository;
 import com.irmamsantos.restaurantfood.domain.service.GrupoService;
@@ -78,10 +74,10 @@ public class GrupoController {
 		return grupoDTOAssembler.toDTO(grupoService.salvar(grupoActual));
 	}
 
-	@DeleteMapping("/{cozinhaId}")
+	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void remover(@PathVariable Long cozinhaId) 
-			throws EntidadeEmUsoException, CozinhaNaoEncontradaException {
-		grupoService.excluir(cozinhaId);
+	public void remover(@PathVariable Long grupoId) 
+			throws EntidadeEmUsoException, GrupoNaoEncontradoException {
+		grupoService.excluir(grupoId);
 	}
 }
