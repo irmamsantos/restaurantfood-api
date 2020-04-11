@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,6 +43,7 @@ public class Pedido {
 	@Column(nullable=false)
 	private BigDecimal valorTotal;
 	
+	@CreationTimestamp
 	@Column(nullable = false, columnDefinition="datetime")
 	private OffsetDateTime dataCriacao;
 	
@@ -58,11 +62,13 @@ public class Pedido {
 	@JoinColumn(name="forma_pagamento_id", nullable = false)
 	private FormaPagamento formaPagamento;
 	
-	@OneToMany(mappedBy = "pedido")
+	//MUITO IMPORTANTE: para gravar ao mesmo tempo ItemPedidos em cascata ao mesmo tempo que pedido
+	//sem este atributo grava o pedido sem Itens
+	@OneToMany(mappedBy = "pedido", cascade=CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>();
 	
 	@Enumerated(EnumType.STRING)
-	private StatusPedido status;
+	private StatusPedido status = StatusPedido.CRIADO;
 	
 	@Embedded
 	private Endereco enderecoEntrega;
@@ -76,6 +82,8 @@ public class Pedido {
 	private Restaurante restaurante;
 	
 	public void calcularValorTotal() {
+		getItens().forEach(ItemPedido::calcularPrecoTotal);
+		
 	    this.subtotal = getItens().stream()
 	        .map(item -> item.getPrecoTotal())
 	        .reduce(BigDecimal.ZERO, BigDecimal::add);
