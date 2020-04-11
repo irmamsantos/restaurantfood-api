@@ -222,6 +222,20 @@ public class RestauranteController {
 		restauranteService.inativar(restauranteId);
 	}
 	
+	//PUT /restaurante/activacoes
+	//[1,3,4]
+	//DELETE /restaurante/activacoes
+	@PutMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+		restauranteService.ativar(restauranteIds);
+	}
+	
+	@DeleteMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+		restauranteService.inativar(restauranteIds);
+	}	
 	
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
 

@@ -1,5 +1,7 @@
 package com.irmamsantos.restaurantfood.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -89,6 +91,16 @@ public class RestauranteService {
 		restauranteActual.inativar();
 	}
 	
+	@Transactional
+	public void ativar(List<Long> restauranteIds) {
+		restauranteIds.forEach(this::ativar);
+	}
+
+	@Transactional
+	public void inativar(List<Long> restauranteIds) {
+		restauranteIds.forEach(this::inativar);
+	}
+
 	public Restaurante buscarOuFalhar(Long restauranteId) throws RestauranteNaoEncontradoException {
 		return restauranteRepository.findById(restauranteId).orElseThrow(
 				() -> new RestauranteNaoEncontradoException(restauranteId));
