@@ -31,7 +31,7 @@ public class Pedido {
 	private Long id;
 
 	@Column(nullable=false)
-	private BigDecimal subTotal;
+	private BigDecimal subtotal;
 	
 	@Column(nullable=false)
 	private BigDecimal taxaFrete;
@@ -65,10 +65,26 @@ public class Pedido {
 	private Endereco enderecoEntrega;
 	
 	@ManyToOne
-	@JoinColumn(name="ususario_cliente_id")
+	@JoinColumn(name="usuario_cliente_id")
 	private Usuario cliente;
 	
 	@ManyToOne
 	@JoinColumn(name="restaurante_id", nullable = false)
 	private Restaurante restaurante;
+	
+	public void calcularValorTotal() {
+	    this.subtotal = getItens().stream()
+	        .map(item -> item.getPrecoTotal())
+	        .reduce(BigDecimal.ZERO, BigDecimal::add);
+	    
+	    this.valorTotal = this.subtotal.add(this.taxaFrete);
+	}
+
+	public void definirFrete() {
+	    setTaxaFrete(getRestaurante().getTaxaFrete());
+	}
+
+	public void atribuirPedidoAosItens() {
+	    getItens().forEach(item -> item.setPedido(this));
+	}
 }
