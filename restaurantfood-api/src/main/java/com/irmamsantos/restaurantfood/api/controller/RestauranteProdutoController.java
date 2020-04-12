@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ import com.irmamsantos.restaurantfood.api.model.dto.input.ProdutoInputDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.output.ProdutoDTO;
 import com.irmamsantos.restaurantfood.domain.model.Produto;
 import com.irmamsantos.restaurantfood.domain.model.Restaurante;
+import com.irmamsantos.restaurantfood.domain.repository.ProdutoRepository;
 import com.irmamsantos.restaurantfood.domain.service.ProdutoService;
 import com.irmamsantos.restaurantfood.domain.service.RestauranteService;
 
@@ -40,16 +42,29 @@ public class RestauranteProdutoController {
 	@Autowired
 	private ProdutoInputDTODisassembler produtoInputDTODisassembler; 
 	
+	@Autowired
+	private ProdutoRepository produtoRepository;
+	
 	//Nesta implementação faz gestão de produtos um a um apartir de restaurantes...
 	// GET /restaurantes/{id}/produtos
 	// PUT /restaurantes/{id}/produtos/{id}
 	// DELETE /restaurantes/{id}/produtos/{id}
 
 	@GetMapping
-	public List<ProdutoDTO> listar(@PathVariable Long restauranteId) {
+	public List<ProdutoDTO> listar(@PathVariable Long restauranteId,
+			@RequestParam(required=false) boolean incluirInativos) {
 		
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		return produtoDTOAssembler.toCollectionDTO(restaurante.getProdutos());
+		
+		List<Produto> todosProdutos = null;
+		
+		if (incluirInativos) {
+			todosProdutos = produtoRepository.findByRestaurante(restaurante);
+		} else {
+			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+		}
+		
+		return produtoDTOAssembler.toCollectionDTO(todosProdutos);
 	}
 	
 	@GetMapping("/{produtoId}")
