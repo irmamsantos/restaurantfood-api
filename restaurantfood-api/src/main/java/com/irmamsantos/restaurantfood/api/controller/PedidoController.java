@@ -27,7 +27,9 @@ import com.irmamsantos.restaurantfood.domain.exception.PedidoNaoEncontradoExcept
 import com.irmamsantos.restaurantfood.domain.model.Pedido;
 import com.irmamsantos.restaurantfood.domain.model.Usuario;
 import com.irmamsantos.restaurantfood.domain.repository.PedidoRepository;
+import com.irmamsantos.restaurantfood.domain.repository.filter.PedidoFilter;
 import com.irmamsantos.restaurantfood.domain.service.EmissaoPedidoService;
+import com.irmamsantos.restaurantfood.infrastructure.repository.spec.PedidoSpecs;
 
 @RestController
 @RequestMapping(value = "/pedidos")
@@ -49,8 +51,9 @@ public class PedidoController {
 	private EmissaoPedidoService pedidoService; 
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<PedidoResumoDTO> listar() {
-		return pedidoResumoDTOAssembler.toCollectionDTO(pedidoRepository.findAll());
+	public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
+		return pedidoResumoDTOAssembler.toCollectionDTO(
+				pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro)));
 	}	
 	
 //	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
