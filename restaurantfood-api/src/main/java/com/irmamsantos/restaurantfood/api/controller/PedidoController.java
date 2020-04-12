@@ -5,6 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,9 +55,16 @@ public class PedidoController {
 	private EmissaoPedidoService pedidoService; 
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
-		return pedidoResumoDTOAssembler.toCollectionDTO(
-				pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro)));
+	public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size=2) Pageable pageable) {
+		Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+		
+		List<PedidoResumoDTO> pedidosDTO = pedidoResumoDTOAssembler.toCollectionDTO(pedidosPage.getContent());
+		
+		Page<PedidoResumoDTO> pedidosDTOPage = new PageImpl<>(pedidosDTO, pageable
+				, pedidosPage.getTotalElements());
+		
+		return pedidosDTOPage;
+
 	}	
 	
 //	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
