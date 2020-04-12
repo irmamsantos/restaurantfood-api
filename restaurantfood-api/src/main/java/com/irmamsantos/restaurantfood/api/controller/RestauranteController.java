@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
@@ -64,10 +65,8 @@ public class RestauranteController {
 	@Autowired
 	private RestauranteInputDTODisassembler restauranteInputDTODisassembler;	
 	
-	//este getting está a ser ignorado quando é feito o request...
-	//parece-me um bug do spring
-	//conseguia contornar isto definindo um mapping diferente
-	//mas este exemplo foi só para ver as capacidades do JsonView... 
+	//CUIDADO projecao só têm um c, estava a ter um comportamento não esperado pelo paramentro 
+	//não ser o mesmo...
 	@JsonView(RestauranteView.ApenasNome.class)
 	@GetMapping(params = "projecao=apenas-nome")
 	public List<RestauranteDTO> listarApenasNomes(@RequestParam(required = false) String projecao) {
@@ -75,8 +74,7 @@ public class RestauranteController {
 	}	
 	
 	@JsonView(RestauranteView.Resumo.class)
-	//@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	@GetMapping
+	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
 	public List<RestauranteDTO> listar() {
 		List<RestauranteDTO> restaurantes = restauranteDTOAssembler.toCollectionDTO(restauranteRepository.findAll());
 		
