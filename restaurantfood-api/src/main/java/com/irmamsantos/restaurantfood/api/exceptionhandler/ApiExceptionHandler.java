@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,7 +42,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@Autowired
 	private MessageSource messageSource;
-
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;		
@@ -66,6 +67,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			ValidacaoException ex, WebRequest request) {
 		return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), 
 				HttpStatus.BAD_REQUEST, request);
+	}
+	
+	//13.7 Tratando BindException ao enviar parâmetros de URL inválidos
+	//quando passou um valor errado num param do URL
+	//org.springframework.validation.BeanPropertyBindingResult
+	@Override
+	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
+			WebRequest request) {
+		return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
 	}
 	
 	@Override
