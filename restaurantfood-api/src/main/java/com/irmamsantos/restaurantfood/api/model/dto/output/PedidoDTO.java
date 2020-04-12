@@ -12,7 +12,9 @@ import lombok.Setter;
 @Getter
 public class PedidoDTO /*PedidoModel*/{
 
-	private Long id;
+	//deixou de expor o id e passa a ser codigo/uuid
+	//private Long id;
+	private String codigo;
 	private BigDecimal subTotal;
 	private BigDecimal taxaFrete;
 	private BigDecimal valorTotal;

@@ -53,11 +53,11 @@ public class PedidoController {
 		return pedidoResumoDTOAssembler.toCollectionDTO(pedidoRepository.findAll());
 	}
 	
-	@GetMapping("/{cidadeId}")
-	public PedidoDTO buscar(@PathVariable("cidadeId") Long id) 
+	@GetMapping("/{codigoPedido}")
+	public PedidoDTO buscar(@PathVariable String codigoPedido) 
 			throws PedidoNaoEncontradoException {
 		
-		return pedidoDTOAssembler.toDTO(pedidoService.buscarOuFalhar(id));
+		return pedidoDTOAssembler.toDTO(pedidoService.buscarOuFalhar(codigoPedido));
 	}
 	
 	@PostMapping
