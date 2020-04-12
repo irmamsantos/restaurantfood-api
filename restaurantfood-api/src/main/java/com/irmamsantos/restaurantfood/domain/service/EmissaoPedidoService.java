@@ -16,7 +16,7 @@ import com.irmamsantos.restaurantfood.domain.model.Usuario;
 import com.irmamsantos.restaurantfood.domain.repository.PedidoRepository;
 
 @Service
-public class PedidoService {
+public class EmissaoPedidoService {
 	
 	@Autowired
 	private PedidoRepository pedidoRepository;
