@@ -5,6 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,13 +50,22 @@ public class CozinhaController {
 	private CozinhaInputDTODisassembler cozinhaInputDTODisassembler;
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<CozinhaDTO> listar1() {
-		return cozinhaDTOAssembler.toCollectionDTO(cozinhaRepository.findAll());
+	public Page<CozinhaDTO> listar1(@PageableDefault(size=2) Pageable pageable) {
+		//13.8 Implementando paginação e ordenação em recursos de coleção da API
+		Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
+		
+		List<CozinhaDTO> cozinhasDTO = cozinhaDTOAssembler
+				.toCollectionDTO(cozinhasPage.getContent());
+		
+		Page<CozinhaDTO> cozinhasDTOPage = new PageImpl<>(cozinhasDTO, pageable
+				, cozinhasPage.getTotalElements());
+		
+		return cozinhasDTOPage;
 	}
 	
 	@GetMapping(produces=MediaType.APPLICATION_XML_VALUE)
-	public CozinhasXmlWrapper listarXML() {
-		return new CozinhasXmlWrapper(listar1());
+	public CozinhasXmlWrapper listarXML(Pageable pageable) {
+		return new CozinhasXmlWrapper(listar1(pageable).getContent());
 	}
 	
 	@GetMapping("/{cozinhaId}")
