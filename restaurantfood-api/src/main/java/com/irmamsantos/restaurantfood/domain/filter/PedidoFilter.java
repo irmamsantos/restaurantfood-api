@@ -1,4 +1,4 @@
-package com.irmamsantos.restaurantfood.domain.repository.filter;
+package com.irmamsantos.restaurantfood.domain.filter;
 
 import java.time.OffsetDateTime;
 

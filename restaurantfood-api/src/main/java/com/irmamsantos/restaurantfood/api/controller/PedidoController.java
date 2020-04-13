@@ -30,10 +30,10 @@ import com.irmamsantos.restaurantfood.core.data.PageableTranslator;
 import com.irmamsantos.restaurantfood.domain.exception.EstadoNaoEncontradoException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.exception.PedidoNaoEncontradoException;
+import com.irmamsantos.restaurantfood.domain.filter.PedidoFilter;
 import com.irmamsantos.restaurantfood.domain.model.Pedido;
 import com.irmamsantos.restaurantfood.domain.model.Usuario;
 import com.irmamsantos.restaurantfood.domain.repository.PedidoRepository;
-import com.irmamsantos.restaurantfood.domain.repository.filter.PedidoFilter;
 import com.irmamsantos.restaurantfood.domain.service.EmissaoPedidoService;
 import com.irmamsantos.restaurantfood.infrastructure.repository.spec.PedidoSpecs;
 
