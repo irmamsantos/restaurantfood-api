@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.collect.ImmutableMap;
 import com.irmamsantos.restaurantfood.api.assembler.PedidoDTOAssembler;
 import com.irmamsantos.restaurantfood.api.assembler.PedidoInputDTODisassembler;
 import com.irmamsantos.restaurantfood.api.assembler.PedidoResumoDTOAssembler;
 import com.irmamsantos.restaurantfood.api.model.dto.input.PedidoInputDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.output.PedidoDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.output.PedidoResumoDTO;
+import com.irmamsantos.restaurantfood.core.data.PageableTranslator;
 import com.irmamsantos.restaurantfood.domain.exception.EstadoNaoEncontradoException;
 import com.irmamsantos.restaurantfood.domain.exception.NegocioException;
 import com.irmamsantos.restaurantfood.domain.exception.PedidoNaoEncontradoException;
@@ -56,6 +58,9 @@ public class PedidoController {
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
 	public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size=2) Pageable pageable) {
+		
+		pageable = traduzirPageable(pageable);
+		
 		Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
 		
 		List<PedidoResumoDTO> pedidosDTO = pedidoResumoDTOAssembler.toCollectionDTO(pedidosPage.getContent());
@@ -109,4 +114,15 @@ public class PedidoController {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
+	
+	private Pageable traduzirPageable(Pageable apiPageable) {
+		ImmutableMap<String, String> mapeamento = ImmutableMap.of(
+				"codigo", "codigo",
+				"restaurante.nome", "restaurante.nome",
+				"nomeCliente", "cliente.nome",
+				"valorTotal", "valorTotal"
+				);
+		return PageableTranslator.translate(apiPageable, mapeamento);
+	}
+
 }
