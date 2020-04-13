@@ -29,14 +29,20 @@ public class VendaQueryServiceImpl implements VendaQueryService {
 	private EntityManager manager;
 
 	@Override
-	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro) {
+	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro, String timeOffset) {
+		//ainda pensei em vez de timeOffset ser Locale mas não faz sentido porque o locale teria de ser no
+		//cliente dado que está em UTC no server, o cliente é quem chama API REST e do lado do cliente
+		//é que pode usar Locale para "calcular" o offset em vez de hardcoded com base num número
 		
-		//usar como guideline
-		//select date(p.data_criacao) as data_criacao,
+		//usar como guideline 
+		//a data está guardada em UTC (+00:00)
+		//e no select usando as datas convertes para "locale brasilia" -03:00
+		//select date(convert_tz(p.data_criacao, '+00:00', '-03:00')) as data_criacao,
 		//       count(p.id) as total_vendas,
 		//       sum(p.valor_total) as total_faturado
 		//from pedido p
-		//group by date(p.data_criacao)
+		//where p.status in ('ENTREGUE', 'CONFIRMADO')
+		//group by date(convert_tz(p.data_criacao, '+00:00', '-03:00'))
 		
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<VendaDiaria> query = builder.createQuery(VendaDiaria.class);
@@ -64,8 +70,12 @@ public class VendaQueryServiceImpl implements VendaQueryService {
 				StatusPedido.CONFIRMADO, StatusPedido.ENTREGUE));
 		
 		//date do sql é uma função da bd
+		Expression<Date> functionConvertTzDateDataCricao = builder.function(
+				"convert_tz", Date.class, 
+				root.get("dataCriacao"), builder.literal("+00:00"), builder.literal(timeOffset));
+		
 		Expression<Date> functionDateDataCricao = builder.function(
-				"date", Date.class, root.get("dataCriacao"));
+				"date", Date.class, functionConvertTzDateDataCricao);
 		
 		CompoundSelection<VendaDiaria> selection = builder.construct(VendaDiaria.class, 
 				functionDateDataCricao,
