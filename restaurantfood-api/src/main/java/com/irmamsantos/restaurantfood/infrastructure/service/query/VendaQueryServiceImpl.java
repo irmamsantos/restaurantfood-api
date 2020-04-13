@@ -1,4 +1,4 @@
-package com.irmamsantos.restaurantfood.infrastructure.service;
+package com.irmamsantos.restaurantfood.infrastructure.service.query;
 
 import java.util.ArrayList;
 import java.util.Date;
