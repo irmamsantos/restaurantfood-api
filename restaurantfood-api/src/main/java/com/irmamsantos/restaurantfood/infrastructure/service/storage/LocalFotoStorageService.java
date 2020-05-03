@@ -36,6 +36,7 @@ public class LocalFotoStorageService implements FotoStorageService {
 		}
 	}	
 	
+	//recuperar no sentido de obter
 	@Override
 	public InputStream recuperar(String nomeArquivo) {
 		try {
