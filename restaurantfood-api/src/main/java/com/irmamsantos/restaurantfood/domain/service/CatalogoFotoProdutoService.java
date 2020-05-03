@@ -25,12 +25,14 @@ public class CatalogoFotoProdutoService {
 		//exluir foto, se existir (senão dava uma SQL constraint Exception, decidiu contornar desta forma)
 		Long restauranteId = foto.getRestauranteId();
 		Long produtoId = foto.getProduto().getId();
+		String nomeArquivoExistente = null;
 		
 		Optional<FotoProduto> fotoExistente = produtoRepository.findFotoById(restauranteId, produtoId);
 		String nomeNovoArquivo = fotoStorageService.gerarNomeArquivo(foto.getNomeArquivo());
 		
 		if (fotoExistente.isPresent()) {
 			//excluir a foto da BD
+			nomeArquivoExistente = fotoExistente.get().getNomeArquivo();
 			produtoRepository.delete(fotoExistente.get());
 		}
 		
@@ -47,7 +49,7 @@ public class CatalogoFotoProdutoService {
 				.nomeArquivo(foto.getNomeArquivo())
 				.inputStream(dadosArquivo).build();
 		
-		fotoStorageService.armazenar(novaFoto);
+		fotoStorageService.subtituir(nomeArquivoExistente, novaFoto);
 		
 		return foto;
 	}
