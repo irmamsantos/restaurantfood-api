@@ -1,11 +1,14 @@
 package com.irmamsantos.restaurantfood.api.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.irmamsantos.restaurantfood.api.assembler.FotoProdutoDTOAssembler;
 import com.irmamsantos.restaurantfood.api.model.dto.input.FotoProdutoInputDTO;
 import com.irmamsantos.restaurantfood.api.model.dto.output.FotoProdutoDTO;
+import com.irmamsantos.restaurantfood.domain.exception.EntidadeNaoEncontradaException;
 import com.irmamsantos.restaurantfood.domain.model.FotoProduto;
 import com.irmamsantos.restaurantfood.domain.model.Produto;
 import com.irmamsantos.restaurantfood.domain.service.CatalogoFotoProdutoService;
+import com.irmamsantos.restaurantfood.domain.service.FotoStorageService;
 import com.irmamsantos.restaurantfood.domain.service.ProdutoService;
 
 @RestController
@@ -27,6 +32,9 @@ public class RestauranteProdutoFotoController {
 	
 	@Autowired
 	private ProdutoService produtoService;
+	
+	@Autowired
+	private FotoStorageService fotoStorageService;
 	
 	@Autowired
 	private CatalogoFotoProdutoService catalogoFotoProduto;
@@ -75,7 +83,7 @@ public class RestauranteProdutoFotoController {
 		return fotoProdutoDTOAssembler.toDTO(fotoSalva);
 	}
 	
-	@GetMapping
+	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
 	public FotoProdutoDTO buscar(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId) {
 		
@@ -83,4 +91,26 @@ public class RestauranteProdutoFotoController {
 		
 		return fotoProdutoDTOAssembler.toDTO(fotoExistente);
 	}
+	
+	@GetMapping(produces=MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId,
+			@PathVariable Long produtoId) {
+		try {
+			FotoProduto fotoExistente = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
+
+			InputStream inputStream = fotoStorageService.recuperar(fotoExistente.getNomeArquivo());
+
+			return ResponseEntity.ok()
+					.contentType(MediaType.IMAGE_JPEG)
+					.body(new InputStreamResource(inputStream));
+		} catch (EntidadeNaoEncontradaException e) {
+			/*
+			 * O accept deste resquest é image/jpeg que não vai conseguir ler json
+			 * O exception handler responde com json para esta excepção e não consegue enviar a 
+			 * resposta ao pedido devolvendo 406 not acceptable para consumidor da api.
+			 * Neste caso apanha a excepção no método e devolve um 404.
+			 */
+			return ResponseEntity.notFound().build();
+		}
+	}	
 }
