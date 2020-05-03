@@ -22,7 +22,7 @@ public class FotoProduto {
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	/*
-	 indica que estás usar a foreign key com chave
+	 indica que estás usar a foreign key como chave
 	 */
 	@MapsId
 	private Produto produto;
