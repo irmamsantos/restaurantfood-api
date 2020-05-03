@@ -11,4 +11,5 @@ public interface ProdutoRepositoryQueries {
 	 * que és esta que é usado em ProdutoRepository
 	 */
 	FotoProduto save(FotoProduto foto);
+	void delete(FotoProduto foto);
 }
