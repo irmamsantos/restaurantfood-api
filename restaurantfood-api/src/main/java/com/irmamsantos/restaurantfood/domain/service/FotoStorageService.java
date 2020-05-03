@@ -1,6 +1,7 @@
 package com.irmamsantos.restaurantfood.domain.service;
 
 import java.io.InputStream;
+import java.util.UUID;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,10 @@ public interface FotoStorageService {
 	 * então definiu uma nova classe (em vez de usar File)
 	 */
 	void armazenar(NovaFoto novaFoto);
+	
+	default String gerarNomeArquivo(String nomeOriginal) {
+		return UUID.randomUUID() + "_" + nomeOriginal;
+	}
 	
 	@Builder
 	@Getter	

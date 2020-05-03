@@ -1,5 +1,7 @@
 package com.irmamsantos.restaurantfood.api.controller;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ public class RestauranteProdutoFotoController {
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId, /*@RequestParam MultipartFile arquivo*/
-			@Valid FotoProdutoInputDTO fotoProdutoInput) {		
+			@Valid FotoProdutoInputDTO fotoProdutoInput) throws IOException {		
 /*		
 		String nomeArquivo = UUID.randomUUID().toString() 
 				+ "_" + fotoProdutoInput.getArquivo().getOriginalFilename();
@@ -67,7 +69,7 @@ public class RestauranteProdutoFotoController {
 		foto.setTamanho(arquivo.getSize());
 		foto.setNomeArquivo(arquivo.getOriginalFilename());
 		
-		FotoProduto fotoSalva = catalogoFotoProduto.salvar(foto);
+		FotoProduto fotoSalva = catalogoFotoProduto.salvar(foto, arquivo.getInputStream());
 		
 		return fotoProdutoDTOAssembler.toDTO(fotoSalva);
 	}
