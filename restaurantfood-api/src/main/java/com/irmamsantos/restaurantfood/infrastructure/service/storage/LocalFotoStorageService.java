@@ -4,17 +4,21 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
+import com.irmamsantos.restaurantfood.core.storage.StorageProperties;
 import com.irmamsantos.restaurantfood.domain.service.FotoStorageService;
 
 @Service
 public class LocalFotoStorageService implements FotoStorageService {
 	
-	@Value("${restaurantfood.storage.local.directorio-fotos}")
-	private Path directorioFotos;
+	@Autowired
+	private StorageProperties storageProperties;
+	
+//	@Value("${restaurantfood.storage.local.directorio-fotos}")
+//	private Path directorioFotos;
 
 	@Override
 	public void armazenar(NovaFoto novaFoto) {
@@ -49,6 +53,7 @@ public class LocalFotoStorageService implements FotoStorageService {
 	}	
 	
 	private Path getArquivoPath(String nomeArquivo) {
-		return directorioFotos.resolve(Path.of(nomeArquivo));
+		//return directorioFotos.resolve(Path.of(nomeArquivo));
+		return storageProperties.getLocal().getDirectorioFotos().resolve(Path.of(nomeArquivo));
 	}
 }
