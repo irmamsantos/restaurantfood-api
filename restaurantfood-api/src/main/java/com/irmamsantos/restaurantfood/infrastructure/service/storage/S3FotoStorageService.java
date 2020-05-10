@@ -13,7 +13,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.irmamsantos.restaurantfood.core.storage.StorageProperties;
 import com.irmamsantos.restaurantfood.domain.service.FotoStorageService;
 
-@Service
+//@Service
 public class S3FotoStorageService implements FotoStorageService {
 
 	@Autowired
