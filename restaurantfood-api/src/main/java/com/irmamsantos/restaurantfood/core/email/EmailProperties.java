@@ -18,4 +18,14 @@ public class EmailProperties {
 	
 	@NotNull
 	private String remetente;
+	
+	// Atribuimos FAKE como padrão
+	// Isso evita o problema de enviar e-mails de verdade caso você esqueça
+	// de definir a propriedade
+	private Implementacao impl = Implementacao.FAKE;
+	
+	enum Implementacao {
+		SMTP,
+		FAKE
+	}
 }

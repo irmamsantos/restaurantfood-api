@@ -5,7 +5,6 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.irmamsantos.restaurantfood.core.email.EmailProperties;
@@ -14,8 +13,8 @@ import com.irmamsantos.restaurantfood.domain.service.EnvioEmailService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-@Service
-public class StmpEnvioEmailService implements EnvioEmailService {
+//@Service
+public class SmtpEnvioEmailService implements EnvioEmailService {
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -23,6 +22,7 @@ public class StmpEnvioEmailService implements EnvioEmailService {
 	@Autowired
 	private EmailProperties emailProperties;
 
+	@Autowired
 	private Configuration freemarkerConfig;
 
 	@Override
@@ -44,7 +44,7 @@ public class StmpEnvioEmailService implements EnvioEmailService {
 		}
 	}
 
-	private String processarTemplate(Mensagem mensagem) {
+	protected String processarTemplate(Mensagem mensagem) {
 		try {
 			/*
 			 * mensagem.getCorpo() é o nome do ficheiro do template
