@@ -17,7 +17,7 @@ public interface FotoStorageService {
 	
 	void remover(String nomeArquivo);
 	
-	InputStream recuperar(String nomeArquivo);
+	FotoRecuperada recuperar(String nomeArquivo);
 	
 	default String gerarNomeArquivo(String nomeOriginal) {
 		return UUID.randomUUID() + "_" + nomeOriginal;
@@ -36,5 +36,25 @@ public interface FotoStorageService {
 		private String nomeArquivo;
 		private String contentType;
 		private InputStream inputStream;
+	}
+	
+	/*
+	 * Retorno do método recuperar pode ser diferente entre o local e S3.
+	 * No S3 retorna directamente o url.
+	 */
+	@Builder
+	@Getter		
+	class FotoRecuperada {
+		private InputStream inputStream;
+		private String url;
+		
+		public boolean temUrl() {
+			return url != null;
+		}
+		
+		public boolean temInputStream() {
+			return inputStream != null;
+		}
+
 	}
 }
