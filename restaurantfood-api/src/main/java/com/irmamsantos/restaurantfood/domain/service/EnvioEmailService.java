@@ -1,5 +1,6 @@
 package com.irmamsantos.restaurantfood.domain.service;
 
+import java.util.Map;
 import java.util.Set;
 
 import lombok.Builder;
@@ -31,5 +32,11 @@ public interface EnvioEmailService {
 		 */
 		@NonNull
 		private String corpo;
+		
+		/*
+		 * lombok - Permite inserir um de cada vez, indica o nome usado em singular
+		 */
+		@Singular("variavel")
+		private Map<String, Object> variaveis;
 	}
 }
