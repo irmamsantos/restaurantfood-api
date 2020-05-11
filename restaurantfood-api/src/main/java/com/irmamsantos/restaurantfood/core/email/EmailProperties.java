@@ -19,6 +19,8 @@ public class EmailProperties {
 	@NotNull
 	private String remetente;
 	
+	private Sandbox sandbox = new Sandbox();
+	
 	// Atribuimos FAKE como padrão
 	// Isso evita o problema de enviar e-mails de verdade caso você esqueça
 	// de definir a propriedade
@@ -26,6 +28,15 @@ public class EmailProperties {
 	
 	enum Implementacao {
 		SMTP,
-		FAKE
+		FAKE,
+		SANDBOX
 	}
+	
+	@Getter
+	@Setter
+	public class Sandbox {
+	    
+	    private String destinatario;
+	    
+	}      
 }
