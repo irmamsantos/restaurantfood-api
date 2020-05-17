@@ -25,7 +25,9 @@ public class FluxoPedidoService {
 	public void confirmar(String codigoPedido) {
 		Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
 		pedido.confirmar();
-/*		
+		
+/* Código movido para NotificacaoClientePedidoConfirmadoListener
+  	
 		Mensagem mensagem = Mensagem.builder()
 				.assunto(pedido.getRestaurante().getNome() + " - Pedido Confirmado")
 //				.corpo("O pedido de código <strong>"
