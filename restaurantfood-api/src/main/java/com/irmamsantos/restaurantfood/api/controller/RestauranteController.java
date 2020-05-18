@@ -11,12 +11,12 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,13 +25,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.HttpHeaders;
 import com.irmamsantos.restaurantfood.api.assembler.RestauranteDTOAssembler;
 import com.irmamsantos.restaurantfood.api.assembler.RestauranteInputDTODisassembler;
 import com.irmamsantos.restaurantfood.api.model.dto.input.RestauranteInputDTO;
@@ -47,6 +47,9 @@ import com.irmamsantos.restaurantfood.domain.model.Restaurante;
 import com.irmamsantos.restaurantfood.domain.repository.RestauranteRepository;
 import com.irmamsantos.restaurantfood.domain.service.RestauranteService;
 
+//@CrossOrigin(origins = "http://localhost:8000")
+//@CrossOrigin(origins = "*")
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/restaurantes") 
 public class RestauranteController {
@@ -68,15 +71,15 @@ public class RestauranteController {
 	
 	//CUIDADO projecao só têm um c, estava a ter um comportamento não esperado pelo paramentro 
 	//não ser o mesmo...
-//	@JsonView(RestauranteView.ApenasNome.class)
-//	@GetMapping(params = "projecao=apenas-nome")
-//	public List<RestauranteDTO> listarApenasNomes(@RequestParam(required = false) String projecao) {
-//		return listar();
-//	}	
+	@JsonView(RestauranteView.ApenasNome.class)
+	@GetMapping(params = "projecao=apenas-nome")
+	public List<RestauranteDTO> listarApenasNomes(@RequestParam(required = false) String projecao) {
+		return listar();
+	}	
 	
 	@JsonView(RestauranteView.Resumo.class)
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<RestauranteDTO>> listar() {
+	public List<RestauranteDTO> listar() {
 		List<RestauranteDTO> restaurantes = restauranteDTOAssembler.toCollectionDTO(restauranteRepository.findAll());
 		
 //		System.out.println(restaurantes.get(0).getNome());
@@ -87,11 +90,16 @@ public class RestauranteController {
 		
 		System.out.println("O nome cozinha é:");
 		System.out.println(restaurantes.get(0).getCozinha().getNome());
-
+		
+/* Exemplo de adicionar manualmente ao header a definição HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN 
+ qual origem permitida 
+ 		
 		return ResponseEntity.ok()
 				//.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:8000")
 				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
 				.body(restaurantes);
+*/
+		return restaurantes;
 	}
 	
 //	@GetMapping
