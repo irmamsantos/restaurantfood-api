@@ -8,5 +8,16 @@ function consultarRestaurantes() {
       }
     });
   }
+
+  function fecharRestaurante() {
+    $.ajax({
+      url: "http://localhost:8080/restaurantes/1/fechamento",
+      type: "put",
   
-  $("#botao").click(consultarRestaurantes);
+      success: function(response) {
+        alert('Restaurante foi fechado');
+      }
+    });
+  }
+  
+  $("#botao").click(fecharRestaurante);
