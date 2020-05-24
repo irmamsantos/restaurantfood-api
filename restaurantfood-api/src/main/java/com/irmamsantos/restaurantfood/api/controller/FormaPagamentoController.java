@@ -62,10 +62,15 @@ public class FormaPagamentoController {
 	}
 	
 	@GetMapping("/{formaPagamentoId}")
-	public FormaPagamentoDTO buscar(@PathVariable("formaPagamentoId") Long id) 
+	public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable("formaPagamentoId") Long id) 
 			throws EntidadeNaoEncontradaException {
 		
-		return formaPagamentoDTOAssembler.toDTO(formaPagamentoService.buscarOuFalhar(id));
+		FormaPagamentoDTO formaPagamento = formaPagamentoDTOAssembler
+				.toDTO(formaPagamentoService.buscarOuFalhar(id));
+		
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				.body(formaPagamento);
 	}
 	
 	@ResponseStatus(code=HttpStatus.CREATED)
