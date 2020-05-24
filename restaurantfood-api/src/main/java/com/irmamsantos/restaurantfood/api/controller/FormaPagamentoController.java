@@ -1,11 +1,14 @@
 package com.irmamsantos.restaurantfood.api.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,8 +48,17 @@ public class FormaPagamentoController {
 	private FormaPagamentoInputDTODisassembler formaPagamentoInputDTODisassembler;	
 	
 	@GetMapping
-	public List<FormaPagamentoDTO> listar() {
-		return formaPagamentoDTOAssembler.toCollectionDTO(formaPagamentoRepository.findAll());
+	public ResponseEntity<List<FormaPagamentoDTO>> listar() {
+		
+		List<FormaPagamentoDTO> formaPagamentos = formaPagamentoDTOAssembler
+				.toCollectionDTO(formaPagamentoRepository.findAll());
+		
+		return ResponseEntity.ok()
+				// Cache-control: max-age=10
+				//poderia fazer com .header("cache-control", headerValues) mas já existe um método
+				//que permite fazer mais via objectos...
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				.body(formaPagamentos);
 	}
 	
 	@GetMapping("/{formaPagamentoId}")
