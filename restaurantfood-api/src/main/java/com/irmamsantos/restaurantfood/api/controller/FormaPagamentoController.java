@@ -70,6 +70,9 @@ public class FormaPagamentoController {
 		
 		return ResponseEntity.ok()
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				//poderia ser feito aqui mas existe uma implementação que já isto
+				//shallowEtagHeaderFilter()
+				//.eTag("dhgd6565d656vv")
 				.body(formaPagamento);
 	}
 	
