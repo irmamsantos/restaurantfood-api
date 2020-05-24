@@ -106,11 +106,27 @@ public class FormaPagamentoController {
 	}
 	
 	@GetMapping("/{formaPagamentoId}")
-	public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable("formaPagamentoId") Long id) 
+	public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable("formaPagamentoId") Long formaPagamentoId,
+			ServletWebRequest webRequest) 
 			throws EntidadeNaoEncontradaException {
 		
+		  ShallowEtagHeaderFilter.disableContentCaching(webRequest.getRequest());
+		    
+		    String eTag = "0";
+		    
+		    OffsetDateTime dataAtualizacao = formaPagamentoRepository
+		            .getDataAtualizacaoById(formaPagamentoId);
+		    
+		    if (dataAtualizacao != null) {
+		        eTag = String.valueOf(dataAtualizacao.toEpochSecond());
+		    }
+		    
+		    if (webRequest.checkNotModified(eTag)) {
+		        return null;
+		    }
+		
 		FormaPagamentoDTO formaPagamento = formaPagamentoDTOAssembler
-				.toDTO(formaPagamentoService.buscarOuFalhar(id));
+				.toDTO(formaPagamentoService.buscarOuFalhar(formaPagamentoId));
 		
 		return ResponseEntity.ok()
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
