@@ -56,6 +56,10 @@ public class CozinhaController {
 	public Page<CozinhaDTO> listar1(@PageableDefault(size=2) Pageable pageable) {
 		log.info("Consultando cozinhas com paginas de {} registros...", pageable.getPageSize());
 		
+//		if (true) {
+//			throw new RuntimeException("Teste de exception");
+//		}
+		
 		//13.8 Implementando paginação e ordenação em recursos de coleção da API
 		Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 		
