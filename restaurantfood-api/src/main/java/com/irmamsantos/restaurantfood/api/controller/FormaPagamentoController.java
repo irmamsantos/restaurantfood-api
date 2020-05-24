@@ -1,5 +1,6 @@
 package com.irmamsantos.restaurantfood.api.controller;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import com.irmamsantos.restaurantfood.api.assembler.FormaPagamentoDTOAssembler;
 import com.irmamsantos.restaurantfood.api.assembler.FormaPagamentoInputDTODisassembler;
@@ -48,7 +51,26 @@ public class FormaPagamentoController {
 	private FormaPagamentoInputDTODisassembler formaPagamentoInputDTODisassembler;	
 	
 	@GetMapping
-	public ResponseEntity<List<FormaPagamentoDTO>> listar() {
+	public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest webRequest) {
+		
+		//não usou outra implementacao para o Deep Tag, reutilizou o ShallowEtagHeaderFilter
+		//desabilitando caching gerido pela mesma implementacao
+		ShallowEtagHeaderFilter.disableContentCaching(webRequest.getRequest());
+		
+		//valor inicial, por omissão caso não haja data de actualizacao, tabela vazia
+		String eTag = "0";
+		
+		OffsetDateTime dataUltimaActualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
+		
+		if (dataUltimaActualizacao != null) {
+			eTag = String.valueOf(dataUltimaActualizacao.toEpochSecond());
+		}
+		
+		//neste momento já têm condições para saber se continua ou não o processamento
+		if (webRequest.checkNotModified(eTag)) {
+			//null ????? Porque não devolve o status 304 !?!?
+			return null;
+		}
 		
 		List<FormaPagamentoDTO> formaPagamentos = formaPagamentoDTOAssembler
 				.toCollectionDTO(formaPagamentoRepository.findAll());
@@ -77,6 +99,9 @@ public class FormaPagamentoController {
 				//esta opção indica mesmo que a resposta não pode ser cached tanto local como partilhado
 				//.cacheControl(CacheControl.noStore())
 				
+				//também poderia fazer-se assim
+				//.header("ETag", eTag)
+				.eTag(eTag)
 				.body(formaPagamentos);
 	}
 	
