@@ -8,14 +8,14 @@ import com.irmamsantos.restaurantfood.client.api.RestaurantClient;
 public class ListagemRestauranteMain {
 
 	public static void main(String[] args) {
-		
+
 		try {
-		RestTemplate restTemplate = new RestTemplate();
-		
-		RestaurantClient restauranteClient = new RestaurantClient(restTemplate, 
-				"http://localhost:8080"); 
-		
-		restauranteClient.listar().stream()
+			RestTemplate restTemplate = new RestTemplate();
+
+			RestaurantClient restauranteClient = new RestaurantClient(restTemplate, 
+					"http://localhost:8080"); 
+
+			restauranteClient.listar().stream()
 			.forEach(restaurante -> System.out.println(restaurante));
 		} catch (ClientApiException e) {
 			if (e.getProblem() != null) {

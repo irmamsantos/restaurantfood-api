@@ -3,7 +3,7 @@ package com.irmamsantos.restaurantfood.client.model;
 import lombok.Data;
 
 @Data
-public class CozinhaDTO {
+public class CidadeResumoDTO {
 
 	private Long id;
 	private String nome;
