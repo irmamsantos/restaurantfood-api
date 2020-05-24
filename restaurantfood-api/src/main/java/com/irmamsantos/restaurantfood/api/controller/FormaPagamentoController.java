@@ -133,6 +133,7 @@ public class FormaPagamentoController {
 				//poderia ser feito aqui mas existe uma implementação que já isto
 				//shallowEtagHeaderFilter()
 				//.eTag("dhgd6565d656vv")
+				.eTag(eTag)
 				.body(formaPagamento);
 	}
 	

@@ -33,6 +33,9 @@ import com.irmamsantos.restaurantfood.domain.model.Cozinha;
 import com.irmamsantos.restaurantfood.domain.repository.CozinhaRepository;
 import com.irmamsantos.restaurantfood.domain.service.CozinhaService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping(value = "/cozinhas") //, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CozinhaController {
@@ -51,6 +54,8 @@ public class CozinhaController {
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
 	public Page<CozinhaDTO> listar1(@PageableDefault(size=2) Pageable pageable) {
+		log.info("Consultando cozinhas com paginas de {} registros...", pageable.getPageSize());
+		
 		//13.8 Implementando paginação e ordenação em recursos de coleção da API
 		Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 		
