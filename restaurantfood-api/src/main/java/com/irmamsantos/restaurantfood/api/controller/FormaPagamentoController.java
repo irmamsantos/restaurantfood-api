@@ -57,7 +57,26 @@ public class FormaPagamentoController {
 				// Cache-control: max-age=10
 				//poderia fazer com .header("cache-control", headerValues) mas já existe um método
 				//que permite fazer mais via objectos...
-				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				//.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS)
+				
+				//.cachePrivate() só faz sentido para dados especificos de um dado utilizador,
+				//faz sentido fazer cache mas não partilhados entre todos os utilizadores
+				//.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+				
+				//.cachePublic() é o valor por omissão e tanto é usado como cache local como
+				//cache partilhado
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+				
+				//este nome engana, esta função implica a fazer sempre validação etag na resposta
+				//como estivesse em stale (dados velhos)
+				//ou seja faz select de validação no serviço mas não responde nenhuma resposta (código status 
+				//304) porque não houve nenhuma alteração da resposta, ou seja é a mesma resposta cacheada 
+				//localmente no browser
+				//.cacheControl(CacheControl.noCache())
+				
+				//esta opção indica mesmo que a resposta não pode ser cached tanto local como partilhado
+				//.cacheControl(CacheControl.noStore())
+				
 				.body(formaPagamentos);
 	}
 	
